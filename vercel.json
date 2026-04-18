@@ -1,7 +1,6 @@
 {
   "functions": {
-    "api/deepseek.js": {
-      "maxDuration": 60
-    }
+    "api/deepseek.js": { "maxDuration": 60 },
+    "api/rss.js":      { "maxDuration": 30 }
   }
 }
