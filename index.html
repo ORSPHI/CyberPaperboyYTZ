@@ -512,7 +512,7 @@ async function fetchBrief() {
   // 5. 构建新闻文本
 const trimmedItems = allItems.slice(0, 25);
 const newsText = trimmedItems.map(i =>
-  `[${i.source}] ${i.title}${i.desc ? '\n' + i.desc.slice(0, 120) : ''}`
+  `[${i.source}] ${i.title}${i.desc ? '\n' + i.desc.slice(0, 80) : ''}`
 ).join('\n\n');
 
   const today = new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric', weekday:'long' });
