@@ -690,13 +690,42 @@ function showFailureNotice(failures) {
 // DEEPSEEK API
 // ════════════════════════════════════════════
 async function callDeepSeek({ model, max_tokens, messages }) {
-  const res  = await fetch('/api/deepseek', {
-    method: 'POST', headers: {'Content-Type':'application/json'},
+  const res = await fetch('/api/deepseek', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ model, max_tokens, messages, apiKey: settings.apiKey }),
   });
-  const data = await res.json();
-  if (data.error) throw new Error(`DeepSeek: ${typeof data.error==='string'?data.error:(data.error.message||JSON.stringify(data.error))}`);
-  return data.choices[0].message.content;
+
+  if (!res.ok && res.headers.get('content-type')?.includes('application/json')) {
+    const data = await res.json();
+    throw new Error(data.error?.message || 'DeepSeek 错误');
+  }
+
+  const reader  = res.body.getReader();
+  const decoder = new TextDecoder();
+  let fullContent = '';
+  let buffer = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || '';
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const data = line.slice(6).trim();
+      if (data === '[DONE]') continue;
+      try {
+        const parsed = JSON.parse(data);
+        const content = parsed.choices?.[0]?.delta?.content;
+        if (content) fullContent += content;
+      } catch {}
+    }
+  }
+
+  if (!fullContent) throw new Error('AI 未返回任何内容');
+  return fullContent;
 }
 
 function extractJson(raw) {
