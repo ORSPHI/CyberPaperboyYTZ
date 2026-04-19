@@ -510,7 +510,7 @@ async function fetchBrief() {
   ).join('\n');
 
   // 5. 构建新闻文本
-const trimmedItems = allItems.slice(0, 25);
+const trimmedItems = allItems.slice(0, 15);
 const newsText = trimmedItems.map(i =>
   `[${i.source}] ${i.title}${i.desc ? '\n' + i.desc.slice(0, 80) : ''}`
 ).join('\n\n');
