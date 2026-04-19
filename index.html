@@ -18,30 +18,25 @@
     #ticker-bar{background:var(--ink);color:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 0;overflow:hidden;white-space:nowrap;}
     #ticker-bar span{display:inline-block;animation:ticker 80s linear infinite;padding-left:100%;}
     @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-100%)}}
-
-    /* ── MARKET STRIP（加宽，分区）── */
     #market-strip{background:#111;border-bottom:2px solid var(--border);overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding:0 4px;scrollbar-width:none;}
     #market-strip::-webkit-scrollbar{display:none;}
-    .mkt{display:inline-flex;flex-direction:column;align-items:flex-start;padding:6px 12px;border-right:1px solid #333;cursor:default;min-width:90px;}
+    .mkt{display:inline-flex;flex-direction:column;align-items:flex-start;padding:5px 10px;border-right:1px solid #333;cursor:default;min-width:82px;}
     .mkt:last-child{border-right:none;}
-    .mkt-top{display:flex;align-items:center;gap:5px;}
+    .mkt-top{display:flex;align-items:center;gap:4px;}
     .mkt-zh{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#aaa;letter-spacing:.04em;}
-    .mkt-state{font-size:8px;padding:1px 4px;border-radius:2px;font-family:'IBM Plex Mono',monospace;}
-    .mkt-state.open{background:#1a7a3a;color:#fff;}
-    .mkt-state.closed{background:#444;color:#aaa;}
-    .mkt-price{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:#eee;margin-top:2px;}
-    .mkt-chg{font-family:'IBM Plex Mono',monospace;font-size:10px;margin-top:1px;}
+    .mkt-state{font-size:7px;padding:1px 3px;border-radius:2px;font-family:'IBM Plex Mono',monospace;}
+    .mkt-state.open{background:#1a7a3a;color:#fff;}.mkt-state.closed{background:#444;color:#aaa;}
+    .mkt-price{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:#eee;margin-top:1px;}
+    .mkt-chg{font-family:'IBM Plex Mono',monospace;font-size:9px;margin-top:1px;}
     .mkt-chg.up{color:#4caf50;}.mkt-chg.down{color:#ef5350;}.mkt-chg.flat{color:#aaa;}
-    .mkt-err{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#666;padding:10px 14px;}
-    .mkt-sep{display:inline-flex;align-items:center;padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:8px;color:#666;letter-spacing:.1em;text-transform:uppercase;border-right:1px solid #333;vertical-align:top;height:100%;min-height:48px;}
-
+    .mkt-err{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#666;padding:8px 14px;}
+    .mkt-sep{display:inline-flex;align-items:center;padding:4px 6px;font-family:'IBM Plex Mono',monospace;font-size:8px;color:#c0392b;letter-spacing:.08em;text-transform:uppercase;border-right:1px solid #333;vertical-align:top;min-height:44px;writing-mode:horizontal-tb;}
     #app{max-width:1280px;margin:0 auto;padding:0 20px 80px;}
     #control-bar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;}
     #fetch-btn{background:var(--ink);color:var(--paper);border:none;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.08em;padding:10px 28px;cursor:pointer;text-transform:uppercase;transition:background .15s,transform .1s;position:relative;overflow:hidden;}
-    #fetch-btn:hover{background:var(--red);}
-    #fetch-btn:active{transform:scale(.97);}
+    #fetch-btn:hover{background:var(--red);}#fetch-btn:active{transform:scale(.97);}
     #fetch-btn.loading{background:var(--gold);pointer-events:none;}
-    #fetch-btn.loading::after{content:'';position:absolute;bottom:0;left:0;height:3px;background:var(--paper);animation:bar 40s ease-out forwards;}
+    #fetch-btn.loading::after{content:'';position:absolute;bottom:0;left:0;height:3px;background:var(--paper);animation:bar 55s ease-out forwards;}
     @keyframes bar{0%{width:0}80%{width:82%}100%{width:96%}}
     #status-text{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--mid);flex:1;}
     #settings-toggle{background:none;border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:6px 14px;cursor:pointer;color:var(--mid);transition:all .15s;}
@@ -57,8 +52,7 @@
     .stab{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:7px 18px;cursor:pointer;border:none;background:none;color:var(--mid);letter-spacing:.06em;text-transform:uppercase;border-bottom:3px solid transparent;margin-bottom:-2px;}
     .stab.active{color:var(--ink);border-bottom-color:var(--red);}
     .stab-panel{display:none;}.stab-panel.active{display:block;}
-    .sg{margin-bottom:20px;}
-    .sg label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--mid);display:block;margin-bottom:6px;}
+    .sg{margin-bottom:20px;}.sg label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--mid);display:block;margin-bottom:6px;}
     .sg input[type=text],.sg input[type=password]{width:100%;background:var(--paper);border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 10px;color:var(--ink);}
     .sg input:focus{outline:2px solid var(--ink);}
     #rss-list{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;}
@@ -115,8 +109,7 @@
     #chat-input{flex:1;background:var(--paper-dark);border:1px solid var(--border);font-family:'Noto Serif SC',serif;font-size:14px;padding:10px 14px;resize:none;height:52px;color:var(--ink);}
     #chat-input:focus{outline:2px solid var(--ink);}
     #send-btn{background:var(--ink);color:var(--paper);border:none;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em;padding:0 20px;cursor:pointer;text-transform:uppercase;transition:background .15s;flex-shrink:0;}
-    #send-btn:hover{background:var(--red);}
-    #send-btn:disabled{background:var(--light);pointer-events:none;}
+    #send-btn:hover{background:var(--red);}#send-btn:disabled{background:var(--light);pointer-events:none;}
     footer{border-top:1px solid var(--border);padding:12px 40px;display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--light);}
     ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--paper-dark);}::-webkit-scrollbar-thumb{background:var(--mid);}
   </style>
@@ -127,63 +120,34 @@
   <h1>Cyber<span>Paperboy</span></h1>
   <div class="tagline">Global risk intelligence<br>daily dispatch</div>
 </header>
-<div id="ticker-bar"><span id="ticker-content">CyberPaperboy · 全球风险情报每日简报 · 出海企业战略风控 · 股市 · 商品 · 汇率 · 风险指标</span></div>
+<div id="ticker-bar"><span id="ticker-content">CyberPaperboy · 全球风险情报 · 出海企业战略风控 · 15大股指 · 10种商品 · 5大汇率 · VIX恐慌指数</span></div>
 <div id="market-strip"><span id="market-loading" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#555;padding:8px 16px;display:inline-block;">正在加载市场数据…</span></div>
 <div id="app">
   <div id="control-bar">
     <button id="fetch-btn" onclick="fetchBrief()">📰 我要买报</button>
     <span id="status-text">就绪 · 点击获取今日情报</span>
     <button id="settings-toggle" onclick="toggleSettings()">⚙ 设置</button>
-    <div id="model-toggle">
-      模型：
-      <select id="model-select">
-        <option value="deepseek-chat">DeepSeek V3（快速）</option>
-        <option value="deepseek-reasoner">DeepSeek R1（深度推理）</option>
-      </select>
-    </div>
+    <div id="model-toggle">模型：<select id="model-select"><option value="deepseek-chat">DeepSeek V3（快速）</option><option value="deepseek-reasoner">DeepSeek R1（深度推理）</option></select></div>
   </div>
   <div id="failure-notice"></div>
   <div id="settings-panel">
     <h3>设置</h3>
     <div class="sg"><label>DEEPSEEK API KEY</label><input type="password" id="api-key-input" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off"/></div>
-    <div class="stabs">
-      <button class="stab active" onclick="switchTab('rss')">📡 RSS 信源</button>
-      <button class="stab" onclick="switchTab('watchlist')">🏢 企业观察名单</button>
-    </div>
-    <div id="tab-rss" class="stab-panel active">
-      <div class="sg" style="margin-bottom:0"><label>信源列表（名称 + URL）</label><div id="rss-list"></div>
-        <div class="btn-row"><button class="abtn" onclick="addRssRow()">+ 添加信源</button><button class="abtn" onclick="saveSettings()">保存并关闭</button><span id="save-status"></span></div>
-      </div>
-    </div>
-    <div id="tab-watchlist" class="stab-panel">
-      <div class="sg" style="margin-bottom:0"><label>企业观察名单（每国20家，AI在简报中优先追踪有新闻的企业）</label>
-        <div id="wl-countries"></div><div id="wl-panels"></div>
-        <p class="wl-note">* 朝鲜无可追踪的公开企业，通过新闻信源间接追踪其政府经济活动。</p>
-        <div class="btn-row"><button class="abtn" onclick="addWlRow()">+ 添加企业</button><button class="abtn" onclick="saveSettings()">保存并关闭</button><span id="save-status2"></span></div>
-      </div>
-    </div>
+    <div class="stabs"><button class="stab active" onclick="switchTab('rss')">📡 RSS 信源</button><button class="stab" onclick="switchTab('watchlist')">🏢 企业观察名单</button></div>
+    <div id="tab-rss" class="stab-panel active"><div class="sg" style="margin-bottom:0"><label>信源列表</label><div id="rss-list"></div><div class="btn-row"><button class="abtn" onclick="addRssRow()">+ 添加信源</button><button class="abtn" onclick="saveSettings()">保存并关闭</button><span id="save-status"></span></div></div></div>
+    <div id="tab-watchlist" class="stab-panel"><div class="sg" style="margin-bottom:0"><label>企业观察名单（每国20家）</label><div id="wl-countries"></div><div id="wl-panels"></div><p class="wl-note">* 朝鲜无可追踪的公开企业，通过新闻信源间接追踪。</p><div class="btn-row"><button class="abtn" onclick="addWlRow()">+ 添加企业</button><button class="abtn" onclick="saveSettings()">保存并关闭</button><span id="save-status2"></span></div></div></div>
   </div>
-  <div id="brief-area">
-    <div id="watchlist-alert"><div class="wa-head">🔔 企业名单调整建议</div><div class="wa-body" id="wa-body"></div></div>
-    <div id="brief-content"></div>
-  </div>
+  <div id="brief-area"><div id="watchlist-alert"><div class="wa-head">🔔 企业名单调整建议</div><div class="wa-body" id="wa-body"></div></div><div id="brief-content"></div></div>
   <div id="chat-area">
-    <h2>▸ 深度对话 · 基于今日简报</h2>
-    <div id="messages"></div>
-    <div id="chat-input-row">
-      <textarea id="chat-input" placeholder="例如：如果我是东南亚制造业出海团队，今天最该关注什么？（Enter 发送）" onkeydown="handleKey(event)"></textarea>
-      <button id="send-btn" onclick="sendChat()">发送</button>
-    </div>
+    <h2>▸ 深度对话 · 基于今日简报</h2><div id="messages"></div>
+    <div id="chat-input-row"><textarea id="chat-input" placeholder="例如：如果我是东南亚制造业出海团队，今天最该关注什么？（Enter 发送）" onkeydown="handleKey(event)"></textarea><button id="send-btn" onclick="sendChat()">发送</button></div>
   </div>
 </div>
-<footer><span>CyberPaperboy v4</span><span>DeepSeek API · 多源 RSS · Stooq / Yahoo Finance</span></footer>
+<footer><span>CyberPaperboy v5</span><span>DeepSeek API · 多源 RSS · Stooq / Yahoo Finance</span></footer>
 
 <script>
-// ════════════════════════════════════════════
-// 默认 RSS 信源（分层体系，已剔除 Vercel 环境下持续失败的源）
-// ════════════════════════════════════════════
 const DEFAULT_FEEDS = [
-  // ── 核心国际媒体（已验证稳定）──
+  // ── 核心国际媒体（稳定）──
   { label: 'BBC World News',       url: 'https://feeds.bbci.co.uk/news/world/rss.xml' },
   { label: 'Al Jazeera',           url: 'https://www.aljazeera.com/xml/rss/all.xml' },
   { label: 'The Guardian World',   url: 'https://www.theguardian.com/world/rss' },
@@ -192,32 +156,29 @@ const DEFAULT_FEEDS = [
   { label: 'Financial Times',      url: 'https://www.ft.com/rss/home' },
   { label: 'Nikkei Asia',          url: 'https://asia.nikkei.com/rss/feed/nar' },
   { label: 'SCMP',                 url: 'https://www.scmp.com/rss/91/feed' },
-  // ── 科技（已验证稳定）──
+  // ── 科技（稳定）──
   { label: 'The Verge',            url: 'https://www.theverge.com/rss/index.xml' },
   { label: 'Ars Technica',         url: 'https://feeds.arstechnica.com/arstechnica/index' },
   { label: 'Hacker News',          url: 'https://hnrss.org/frontpage' },
   { label: '36氪',                 url: 'https://36kr.com/feed' },
-  // ── 政府（已验证稳定）──
+  // ── 政府（稳定）──
   { label: 'UK Government',        url: 'https://www.gov.uk/search/news-and-communications.atom' },
   { label: 'TASS English',         url: 'https://tass.com/rss/v2.xml' },
-  // ── 国际组织（已验证稳定）──
+  // ── 国际组织（已验证可用）──
   { label: 'UN News',              url: 'https://news.un.org/feed/subscribe/en/news/all/rss.xml' },
   { label: 'European Parliament',  url: 'https://www.europarl.europa.eu/rss/doc/top-stories/en.xml' },
   { label: 'ECB Press',            url: 'https://www.ecb.europa.eu/rss/press.html' },
   { label: 'Japan Times',          url: 'https://www.japantimes.co.jp/feed/' },
-  // ── 企业情报（已验证稳定）──
+  // ── 企业情报（已验证可用）──
   { label: 'TechCrunch',           url: 'https://techcrunch.com/feed/' },
   { label: 'GlobeNewsWire',        url: 'https://www.globenewswire.com/RssFeed/subjectcode/01-ACQ/feedTitle/GlobeNewsWire' },
   { label: 'PR Newswire',          url: 'https://www.prnewswire.com/rss/news-releases-list.rss' },
-  // ── 替换此前失败源（选用新闻分发类、WordPress类站点，抗封锁）──
+  // ── 深度分析与政策（替换失败源，选用分发型/WordPress站点）──
   { label: 'MarketWatch',          url: 'https://feeds.marketwatch.com/marketwatch/topstories/' },
   { label: 'The Diplomat',         url: 'https://thediplomat.com/feed/' },
   { label: 'Foreign Policy',       url: 'https://foreignpolicy.com/feed/' },
   { label: 'Politico',             url: 'https://www.politico.com/rss/politicopicks.xml' },
-  { label: 'Defense One',          url: 'https://www.defenseone.com/rss/' },
   { label: 'Asia Times',           url: 'https://asiatimes.com/feed/' },
-  { label: 'Business Wire',        url: 'https://feed.businesswire.com/rss/home/?rss=G1QFDERJXkJeEFtRXA==' },
-  { label: 'Caixin Global',        url: 'https://www.caixinglobal.com/rss/' },
 ];
 
 const DEFAULT_WATCHLIST = {
@@ -234,179 +195,110 @@ const DEFAULT_WATCHLIST = {
 
 let briefContext='',chatHistory=[],settings={},activeWlCountry=Object.keys(DEFAULT_WATCHLIST)[0],activeSettingsTab='rss';
 
-window.onload=()=>{
-  document.getElementById('date-display').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
-  loadSettings();
-  if(!settings.apiKey){document.getElementById('settings-panel').classList.add('visible');document.getElementById('status-text').textContent='⚠ 请先填入 API Key 并保存';}
-  loadMarkets();
-};
-
-function loadSettings(){
-  try{const s=localStorage.getItem('cpb_settings_v4');settings=s?JSON.parse(s):{apiKey:'',feeds:DEFAULT_FEEDS,watchlist:DEFAULT_WATCHLIST};if(!settings.feeds)settings.feeds=DEFAULT_FEEDS;if(!settings.watchlist)settings.watchlist=DEFAULT_WATCHLIST;}catch{settings={apiKey:'',feeds:DEFAULT_FEEDS,watchlist:DEFAULT_WATCHLIST};}
-  document.getElementById('api-key-input').value=settings.apiKey||'';renderRssList();renderWatchlist();
-}
-function saveSettings(){
-  settings.apiKey=document.getElementById('api-key-input').value.trim();settings.feeds=collectRssRows();settings.watchlist=collectWatchlist();
-  localStorage.setItem('cpb_settings_v4',JSON.stringify(settings));
-  ['save-status','save-status2'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='✓ 已保存';setTimeout(()=>el.textContent='',2000);}});
-  document.getElementById('settings-panel').classList.remove('visible');
-  if(settings.apiKey)document.getElementById('status-text').textContent='就绪 · 点击获取今日情报';
-}
+window.onload=()=>{document.getElementById('date-display').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});loadSettings();if(!settings.apiKey){document.getElementById('settings-panel').classList.add('visible');document.getElementById('status-text').textContent='⚠ 请先填入 API Key 并保存';}loadMarkets();};
+function loadSettings(){try{const s=localStorage.getItem('cpb_settings_v5');settings=s?JSON.parse(s):{apiKey:'',feeds:DEFAULT_FEEDS,watchlist:DEFAULT_WATCHLIST};if(!settings.feeds)settings.feeds=DEFAULT_FEEDS;if(!settings.watchlist)settings.watchlist=DEFAULT_WATCHLIST;}catch{settings={apiKey:'',feeds:DEFAULT_FEEDS,watchlist:DEFAULT_WATCHLIST};}document.getElementById('api-key-input').value=settings.apiKey||'';renderRssList();renderWatchlist();}
+function saveSettings(){settings.apiKey=document.getElementById('api-key-input').value.trim();settings.feeds=collectRssRows();settings.watchlist=collectWatchlist();localStorage.setItem('cpb_settings_v5',JSON.stringify(settings));['save-status','save-status2'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='✓ 已保存';setTimeout(()=>el.textContent='',2000);}});document.getElementById('settings-panel').classList.remove('visible');if(settings.apiKey)document.getElementById('status-text').textContent='就绪 · 点击获取今日情报';}
 function toggleSettings(){document.getElementById('settings-panel').classList.toggle('visible');}
-function switchTab(name){activeSettingsTab=name;document.querySelectorAll('.stab').forEach((t,i)=>t.classList.toggle('active',['rss','watchlist'][i]===name));document.querySelectorAll('.stab-panel').forEach(p=>p.classList.remove('active'));document.getElementById(`tab-${name}`).classList.add('active');}
-function renderRssList(){const list=document.getElementById('rss-list');list.innerHTML='';(settings.feeds||DEFAULT_FEEDS).forEach(f=>list.appendChild(makeRssRow(f.label,f.url)));}
-function makeRssRow(l,u){const r=document.createElement('div');r.className='rss-row';r.innerHTML=`<input class="rl" type="text" value="${esc(l)}" placeholder="信源名称"><input class="ru" type="text" value="${esc(u)}" placeholder="RSS URL"><button class="del" onclick="this.closest('.rss-row').remove()">✕</button>`;return r;}
+function switchTab(n){activeSettingsTab=n;document.querySelectorAll('.stab').forEach((t,i)=>t.classList.toggle('active',['rss','watchlist'][i]===n));document.querySelectorAll('.stab-panel').forEach(p=>p.classList.remove('active'));document.getElementById(`tab-${n}`).classList.add('active');}
+function renderRssList(){const l=document.getElementById('rss-list');l.innerHTML='';(settings.feeds||DEFAULT_FEEDS).forEach(f=>l.appendChild(makeRssRow(f.label,f.url)));}
+function makeRssRow(l,u){const r=document.createElement('div');r.className='rss-row';r.innerHTML=`<input class="rl" type="text" value="${esc(l)}" placeholder="名称"><input class="ru" type="text" value="${esc(u)}" placeholder="RSS URL"><button class="del" onclick="this.closest('.rss-row').remove()">✕</button>`;return r;}
 function addRssRow(){document.getElementById('rss-list').appendChild(makeRssRow('',''));}
 function collectRssRows(){return Array.from(document.querySelectorAll('.rss-row')).map(r=>({label:r.querySelector('.rl').value.trim(),url:r.querySelector('.ru').value.trim()})).filter(f=>f.url);}
-function renderWatchlist(){
-  const countries=Object.keys(settings.watchlist||DEFAULT_WATCHLIST),tabs=document.getElementById('wl-countries'),panels=document.getElementById('wl-panels');tabs.innerHTML='';panels.innerHTML='';
-  countries.forEach((c,i)=>{const tab=document.createElement('button');tab.className='wl-ctab'+(i===0?' active':'');tab.textContent=c;tab.onclick=()=>switchWlCountry(c);tabs.appendChild(tab);const panel=document.createElement('div');panel.className='wl-country-panel'+(i===0?' active':'');panel.id=`wlp-${c}`;panel.innerHTML=`<label>${c} · 企业列表</label><div class="wl-list" id="wll-${c}"></div>`;panels.appendChild(panel);const list=document.getElementById(`wll-${c}`);(settings.watchlist[c]||[]).forEach(name=>list.appendChild(makeWlRow(name)));});
-  activeWlCountry=countries[0];
-}
+function renderWatchlist(){const cs=Object.keys(settings.watchlist||DEFAULT_WATCHLIST),tabs=document.getElementById('wl-countries'),panels=document.getElementById('wl-panels');tabs.innerHTML='';panels.innerHTML='';cs.forEach((c,i)=>{const t=document.createElement('button');t.className='wl-ctab'+(i===0?' active':'');t.textContent=c;t.onclick=()=>switchWlCountry(c);tabs.appendChild(t);const p=document.createElement('div');p.className='wl-country-panel'+(i===0?' active':'');p.id=`wlp-${c}`;p.innerHTML=`<label>${c}</label><div class="wl-list" id="wll-${c}"></div>`;panels.appendChild(p);const l=document.getElementById(`wll-${c}`);(settings.watchlist[c]||[]).forEach(n=>l.appendChild(makeWlRow(n)));});activeWlCountry=cs[0];}
 function makeWlRow(n){const r=document.createElement('div');r.className='wl-row';r.innerHTML=`<input type="text" value="${esc(n)}" placeholder="企业名称"><button class="wl-del" onclick="this.closest('.wl-row').remove()">✕</button>`;return r;}
 function addWlRow(){const l=document.getElementById(`wll-${activeWlCountry}`);if(l)l.appendChild(makeWlRow(''));}
 function switchWlCountry(c){activeWlCountry=c;document.querySelectorAll('.wl-ctab').forEach(t=>t.classList.toggle('active',t.textContent===c));document.querySelectorAll('.wl-country-panel').forEach(p=>p.classList.toggle('active',p.id===`wlp-${c}`));}
-function collectWatchlist(){const wl={};Object.keys(settings.watchlist||DEFAULT_WATCHLIST).forEach(c=>{const rows=document.querySelectorAll(`#wll-${c} .wl-row input`);wl[c]=Array.from(rows).map(r=>r.value.trim()).filter(Boolean);});return wl;}
+function collectWatchlist(){const w={};Object.keys(settings.watchlist||DEFAULT_WATCHLIST).forEach(c=>{const rs=document.querySelectorAll(`#wll-${c} .wl-row input`);w[c]=Array.from(rs).map(r=>r.value.trim()).filter(Boolean);});return w;}
 
-// ════════════════════════════════════════════
-// MARKET STRIP（分区渲染：股指 | 商品 | 汇率 | 风险）
-// ════════════════════════════════════════════
-async function loadMarkets(){
-  try{const res=await fetch('/api/stocks');const data=await res.json();renderMarketStrip(data);}
-  catch{document.getElementById('market-strip').innerHTML='<span class="mkt-err">市场数据暂时不可用</span>';}
-}
-
+// ═══ MARKET STRIP ═══
+async function loadMarkets(){try{const r=await fetch('/api/stocks');const d=await r.json();renderMarketStrip(d);}catch{document.getElementById('market-strip').innerHTML='<span class="mkt-err">市场数据暂时不可用</span>';}}
 function renderMarketStrip({markets,error}){
   const strip=document.getElementById('market-strip');
-  if(!markets||markets.length===0){strip.innerHTML=`<span class="mkt-err">市场数据不可用${error?'：'+error:''}</span>`;return;}
-  const catLabels={idx:'股指',cmd:'商品',fx:'汇率',risk:'风险'};
-  const catOrder=['idx','cmd','fx','risk'];
-  const failed=markets.filter(m=>m.error);
-  const valid=markets.filter(m=>!m.error);
-  let html='';
-  let lastCat='';
+  if(!markets||!markets.length){strip.innerHTML=`<span class="mkt-err">市场数据不可用${error?'：'+error:''}</span>`;return;}
+  const catLabel={idx:'股指',cmd:'商品',fx:'汇率',risk:'风险'};
+  const failed=markets.filter(m=>m.error),valid=markets.filter(m=>!m.error);
+  let html='',lastCat='';
   for(const m of valid){
-    // 分区标签
-    if(m.cat&&m.cat!==lastCat&&catLabels[m.cat]){
-      if(lastCat)html+=`<span class="mkt-sep">${catLabels[m.cat]}</span>`;
-      lastCat=m.cat;
-    }
+    if(m.cat&&m.cat!==lastCat){if(lastCat)html+=`<span class="mkt-sep">${catLabel[m.cat]||''}</span>`;lastCat=m.cat;}
     const up=m.changePct>=0,flat=Math.abs(m.changePct)<0.01;
-    const cls=flat?'flat':up?'up':'down';
-    const arrow=flat?'─':up?'▲':'▼';
-    const stateHtml=(m.cat==='idx')?(m.state==='REGULAR'?'<span class="mkt-state open">开盘</span>':'<span class="mkt-state closed">收盘</span>'):'';
-    const price=Number(m.price).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const cls=flat?'flat':up?'up':'down',arrow=flat?'─':up?'▲':'▼';
+    const st=(m.cat==='idx')?(m.state==='REGULAR'?'<span class="mkt-state open">开盘</span>':'<span class="mkt-state closed">收盘</span>'):'';
+    const pr=Number(m.price).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2});
     const pct=(up&&!flat?'+':'')+Number(m.changePct).toFixed(2)+'%';
-    html+=`<div class="mkt"><div class="mkt-top"><span class="mkt-zh">${m.zh}</span>${stateHtml}</div><span class="mkt-price">${price}</span><span class="mkt-chg ${cls}">${arrow} ${pct}</span></div>`;
+    html+=`<div class="mkt"><div class="mkt-top"><span class="mkt-zh">${m.zh}</span>${st}</div><span class="mkt-price">${pr}</span><span class="mkt-chg ${cls}">${arrow} ${pct}</span></div>`;
   }
-  if(failed.length>0)html+=`<span class="mkt-err">部分数据不可用: ${failed.map(m=>m.zh||m.symbol).join(', ')}</span>`;
+  if(failed.length>0&&failed.length<markets.length)html+=`<span class="mkt-err">部分不可用: ${failed.map(m=>m.zh||m.symbol).join(', ')}</span>`;
   strip.innerHTML=html;
 }
 
-// ════════════════════════════════════════════
-// FETCH BRIEF
-// ════════════════════════════════════════════
+// ═══ FETCH BRIEF ═══
 async function fetchBrief(){
-  if(!settings.apiKey){document.getElementById('settings-panel').classList.add('visible');document.getElementById('status-text').textContent='⚠ 请先填入 API Key 并保存';return;}
+  if(!settings.apiKey){document.getElementById('settings-panel').classList.add('visible');document.getElementById('status-text').textContent='⚠ 请先填入 API Key';return;}
   const btn=document.getElementById('fetch-btn'),status=document.getElementById('status-text');
-  btn.classList.add('loading');btn.textContent='⏳ 报童送报中…';
-  status.textContent='正在从服务端抓取 RSS 信源…';
+  btn.classList.add('loading');btn.textContent='⏳ 报童送报中…';status.textContent='正在抓取 RSS 信源…';
   const feeds=(settings.feeds?.length)?settings.feeds:DEFAULT_FEEDS;
   let allItems=[],rssFailures=[];
   try{const r=await fetch('/api/rss',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({feeds})});const d=await r.json();allItems=d.items||[];rssFailures=d.failures||[];}
   catch(e){btn.classList.remove('loading');btn.textContent='📰 我要买报';status.textContent=`⚠ RSS 抓取失败：${e.message}`;return;}
-
-  let stockSummary='（今日市场数据获取失败）';
+  let stockSummary='（无市场数据）';
   try{const sr=await fetch('/api/stocks');const sd=await sr.json();stockSummary=formatStockSummary(sd.markets||[]);renderMarketStrip(sd);}catch{}
-
   showFailureNotice(rssFailures);
-  if(!allItems.length){btn.classList.remove('loading');btn.textContent='📰 我要买报';status.textContent='⚠ 所有 RSS 源均失败';return;}
-  status.textContent=`已获取 ${allItems.length} 条信息，正在生成情报简报…`;
-
+  if(!allItems.length){btn.classList.remove('loading');btn.textContent='📰 我要买报';status.textContent='⚠ 所有信源均失败';return;}
+  status.textContent=`已获取 ${allItems.length} 条，正在生成情报…`;
   const wl=settings.watchlist||DEFAULT_WATCHLIST;
-  const watchlistText=Object.entries(wl).map(([c,cos])=>`${c}：${cos.join('、')}`).join('\n');
-  const trimmedItems=allItems.slice(0,40);
-  const newsText=trimmedItems.map(i=>`[${i.source}] ${i.title}${i.desc?'\n'+i.desc.slice(0,60):''}`).join('\n\n');
+  const wlText=Object.entries(wl).map(([c,cos])=>`${c}：${cos.join('、')}`).join('\n');
+  const items=allItems.slice(0,35);
+  const newsText=items.map(i=>`[${i.source}] ${i.title}${i.desc?'\n'+i.desc.slice(0,50):''}`).join('\n\n');
   const today=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
-  const SYSTEM=buildSystemPrompt(today,watchlistText,stockSummary);
-
   try{
     const model=document.getElementById('model-select').value;
-    const raw=await callDeepSeek({model,max_tokens:2800,messages:[{role:'system',content:SYSTEM},{role:'user',content:`今日原始新闻（共${allItems.length}条，展示前${trimmedItems.length}条）：\n\n${newsText}`}]});
+    const raw=await callDeepSeek({model,max_tokens:2000,messages:[{role:'system',content:buildPrompt(today,wlText,stockSummary)},{role:'user',content:`今日新闻（共${allItems.length}条，前${items.length}条）：\n\n${newsText}`}]});
     const brief=extractJson(raw);
-    briefContext=newsText+'\n\n【市场数据】\n'+stockSummary;
-    chatHistory=[];renderBrief(brief);updateTicker(brief);
+    briefContext=newsText+'\n\n【市场数据】\n'+stockSummary;chatHistory=[];renderBrief(brief);updateTicker(brief);
     btn.classList.remove('loading');btn.textContent='🔄 再来一份';
     status.textContent=`✓ 简报已送达 · ${new Date().toLocaleTimeString('zh-CN')} · ${allItems.length} 条原始信息`;
   }catch(err){btn.classList.remove('loading');btn.textContent='📰 我要买报';status.textContent=`⚠ ${err.message}`;console.error('[CPB]',err);}
 }
 
-function buildSystemPrompt(today,watchlistText,stockSummary){
-  return `你是CyberPaperboy，服务出海企业战略与风控的全球风险情报分析师。今天是${today}。
+function buildPrompt(today,wlText,stockSummary){
+  return `你是CyberPaperboy，服务出海企业的全球风险情报分析师。今天是${today}。
+企业观察名单：
+${wlText}
+市场数据：${stockSummary}
+合规：台湾只纳入经济统计数据，不纳入政治声明。
 
-【服务对象】初创出海企业战略部、风险研判岗位、国际业务负责人。
-【核心任务】从原始新闻中筛选对出海企业有实际影响的风险信号，按情报标准输出结构化分析。不是新闻摘要，而是风险情报。
-
-【企业观察名单】
-${watchlistText}
-
-【全球市场数据】
-${stockSummary}
-
-【合规边界】台湾相关只纳入官方统计和经济数据，不纳入政治声明性内容。所有内容以风险提示为导向，不做立场表达。
-
-严格只输出JSON，不含任何其他文字：
-{"headline":"一句话风险概要（面向出海企业视角）","lead":{"title":"头条标题","body":"150字深度分析：事件背景→核心变量→对出海企业的风险传导路径"},"sections":[{"name":"宏观政策与政府决策","emoji":"🏛️","items":[{"title":"标题（聚焦具体政策动作）","body":"60字：政策内容→影响范围→对企业经营环境的传导","source":"来源","en_original":null}]},{"name":"外交动态与关系网络","emoji":"🤝","items":[{"title":"[行为方]→[受动方]：具体动作","body":"60字：动作→意图推断→对贸易投资供应链的风险传导","source":"来源","en_original":null}]},{"name":"科技与创新","emoji":"💡","items":[{"title":"标题","body":"60字：技术动态→产业影响→供应链或竞争格局变化","source":"来源","en_original":null}]},{"name":"财经与市场数据","emoji":"📊","items":[{"title":"标题（含关键数字）","body":"60字含具体数据：数据变化→宏观含义→对资金流向或经营成本影响","source":"来源","en_original":null}]},{"name":"企业战略动向","emoji":"🏢","items":[{"title":"【企业名】：具体事件","body":"60字：事件性质→战略意图→行业信号","source":"来源","en_original":null}]}],"analyst_note":"120字跨板块关联分析：将今日事件与观察名单企业、行业趋势和地区风险绑定，指出出海企业应重点关注的2-3个风险节点","watchlist_alert":null}
-
-【分析标准】
-1.筛选：按对出海企业的影响程度和时间敏感度排序，不收录无风险信号的泛化新闻
-2.宏观：聚焦监管规则、出口管制、关税、投资审查、行业准入变化、关键人事任免、财政货币政策转向
-3.外交：关注关系变化对贸易通道、投资环境、供应链的传导，细化到人对人和机构对机构层面
-4.财经：必须含具体数字，覆盖就业通胀外贸资金流向产业政策
-5.企业：优先匹配观察名单，关注人事任免、财报、股东变化、战略调整、供应链重组、合规争议
-6.每板块4-6条，企业板块至少3条。某板块无相关新闻则items为[]
-7.watchlist_alert仅在观察名单企业发生重大结构性变化时填写，否则为null`;
+严格只输出JSON：
+{"headline":"一句话风险概要","lead":{"title":"头条","body":"100字：背景→变量→对出海企业的传导"},"sections":[{"name":"宏观政策与政府决策","emoji":"🏛️","items":[{"title":"标题","body":"40字分析含传导路径","source":"来源","en_original":null}]},{"name":"外交动态与关系网络","emoji":"🤝","items":[{"title":"[行为方]→[受动方]：动作","body":"40字含风险传导","source":"来源","en_original":null}]},{"name":"科技与创新","emoji":"💡","items":[{"title":"标题","body":"40字含产业影响","source":"来源","en_original":null}]},{"name":"财经与市场数据","emoji":"📊","items":[{"title":"标题含数字","body":"40字含数据和影响","source":"来源","en_original":null}]},{"name":"企业战略动向","emoji":"🏢","items":[{"title":"【企业】：事件","body":"40字含战略信号","source":"来源","en_original":null}]}],"analyst_note":"80字跨板块关联，绑定观察名单企业与风险节点","watchlist_alert":null}
+要求：每板块3-4条，企业至少3条，无新闻则items为[]。聚焦对出海企业有实际影响的风险信号。`;
 }
 
 function formatStockSummary(markets){
   if(!markets||!markets.length)return'（无数据）';
-  const catNames={idx:'股指',cmd:'商品',fx:'汇率',risk:'风险'};
-  let parts=[];let lastCat='';
-  for(const m of markets.filter(m=>!m.error)){
-    if(m.cat&&m.cat!==lastCat){parts.push(`\n[${catNames[m.cat]||m.cat}]`);lastCat=m.cat;}
-    const sign=m.changePct>=0?'+':'';
-    parts.push(`${m.zh}: ${Number(m.price).toLocaleString('en',{maximumFractionDigits:2})} (${sign}${Number(m.changePct).toFixed(2)}%)`);
-  }
-  return parts.join(' | ');
+  const cn={idx:'股指',cmd:'商品',fx:'汇率',risk:'风险'};let ps=[],lc='';
+  for(const m of markets.filter(m=>!m.error)){if(m.cat&&m.cat!==lc){ps.push(`[${cn[m.cat]||m.cat}]`);lc=m.cat;}const s=m.changePct>=0?'+':'';ps.push(`${m.zh}:${Number(m.price).toLocaleString('en',{maximumFractionDigits:2})}(${s}${Number(m.changePct).toFixed(2)}%)`);}
+  return ps.join(' ');
 }
 
-// ════════════════════════════════════════════
-// RENDER
-// ════════════════════════════════════════════
-function renderBrief(brief){
-  const alertEl=document.getElementById('watchlist-alert'),alertBody=document.getElementById('wa-body');
-  if(brief.watchlist_alert){alertBody.textContent=brief.watchlist_alert;alertEl.classList.add('visible');}else{alertEl.classList.remove('visible');}
-  let html=`<div class="sec-head" style="margin-top:12px"><h2>今日要闻</h2><div class="rule"></div></div><div class="ngrid"><div class="lead"><div class="lead-hed">${esc(brief.lead?.title||'')}</div><div class="lead-rule"></div><div class="lead-dek">${esc(brief.lead?.body||'')}</div></div></div>`;
-  (brief.sections||[]).forEach(sec=>{if(!sec.items?.length)return;html+=`<div class="sec-head"><h2>${sec.emoji||''} ${esc(sec.name)}</h2><div class="rule"></div><span class="cnt">${sec.items.length} 条</span></div><div class="ngrid">${sec.items.map(it=>{const enO=it.en_original?`<div class="en-orig">${esc(it.en_original)}</div>`:'';return`<div class="ni"><h3>${esc(it.title)}</h3><p>${esc(it.body)}</p>${enO}<div class="src">${esc(it.source||'')}</div></div>`;}).join('')}</div>`;});
-  if(brief.analyst_note){html+=`<div class="sec-head"><h2>✍ 分析师按语</h2><div class="rule"></div></div><div class="anote">${esc(brief.analyst_note)}</div>`;}
-  document.getElementById('brief-content').innerHTML=html;
-  document.getElementById('brief-area').classList.add('visible');
-  document.getElementById('chat-area').classList.add('visible');
-  document.getElementById('messages').innerHTML='';
-  addMsg('assistant',`今日简报已送达。要点：${brief.headline||''}\n\n可就任何议题深度追问，例如：这对我的XX行业意味着什么？某家企业今天值得关注吗？`);
+// ═══ RENDER ═══
+function renderBrief(b){
+  const ae=document.getElementById('watchlist-alert'),ab=document.getElementById('wa-body');
+  if(b.watchlist_alert){ab.textContent=b.watchlist_alert;ae.classList.add('visible');}else{ae.classList.remove('visible');}
+  let h=`<div class="sec-head" style="margin-top:12px"><h2>今日要闻</h2><div class="rule"></div></div><div class="ngrid"><div class="lead"><div class="lead-hed">${esc(b.lead?.title||'')}</div><div class="lead-rule"></div><div class="lead-dek">${esc(b.lead?.body||'')}</div></div></div>`;
+  (b.sections||[]).forEach(s=>{if(!s.items?.length)return;h+=`<div class="sec-head"><h2>${s.emoji||''} ${esc(s.name)}</h2><div class="rule"></div><span class="cnt">${s.items.length} 条</span></div><div class="ngrid">${s.items.map(i=>{const eo=i.en_original?`<div class="en-orig">${esc(i.en_original)}</div>`:'';return`<div class="ni"><h3>${esc(i.title)}</h3><p>${esc(i.body)}</p>${eo}<div class="src">${esc(i.source||'')}</div></div>`;}).join('')}</div>`;});
+  if(b.analyst_note)h+=`<div class="sec-head"><h2>✍ 分析师按语</h2><div class="rule"></div></div><div class="anote">${esc(b.analyst_note)}</div>`;
+  document.getElementById('brief-content').innerHTML=h;document.getElementById('brief-area').classList.add('visible');document.getElementById('chat-area').classList.add('visible');document.getElementById('messages').innerHTML='';
+  addMsg('assistant',`今日简报已送达。要点：${b.headline||''}\n\n可深度追问任何议题。`);
 }
-function updateTicker(brief){const titles=(brief.sections||[]).flatMap(s=>(s.items||[]).map(i=>i.title));document.getElementById('ticker-content').textContent=`CyberPaperboy · ${brief.headline||''} · `+titles.join(' · ');}
-function showFailureNotice(failures){const el=document.getElementById('failure-notice');if(failures.length===0){el.classList.remove('visible');return;}el.innerHTML=`⚠ 以下信源本次抓取失败（内容已从其他信源补充）：${failures.map(f=>`<strong>${esc(f)}</strong>`).join('、')}`;el.classList.add('visible');}
+function updateTicker(b){document.getElementById('ticker-content').textContent=`CyberPaperboy · ${b.headline||''} · `+(b.sections||[]).flatMap(s=>(s.items||[]).map(i=>i.title)).join(' · ');}
+function showFailureNotice(f){const el=document.getElementById('failure-notice');if(!f.length){el.classList.remove('visible');return;}el.innerHTML=`⚠ 以下信源抓取失败（已从其他信源补充）：${f.map(x=>`<strong>${esc(x)}</strong>`).join('、')}`;el.classList.add('visible');}
 
-// ════════════════════════════════════════════
-// DEEPSEEK API
-// ════════════════════════════════════════════
+// ═══ API ═══
 async function callDeepSeek({model,max_tokens,messages}){
   const res=await fetch('/api/deepseek',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model,max_tokens,messages,apiKey:settings.apiKey})});
-  if(!res.ok&&res.headers.get('content-type')?.includes('application/json')){const data=await res.json();throw new Error(data.error?.message||'DeepSeek 错误');}
-  const reader=res.body.getReader(),decoder=new TextDecoder();let fullContent='',buffer='';
-  while(true){const{done,value}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});const lines=buffer.split('\n');buffer=lines.pop()||'';for(const line of lines){if(!line.startsWith('data: '))continue;const data=line.slice(6).trim();if(data==='[DONE]')continue;try{const p=JSON.parse(data);const c=p.choices?.[0]?.delta?.content;if(c)fullContent+=c;}catch{}}}
-  if(!fullContent)throw new Error('AI 未返回任何内容');return fullContent;
+  if(!res.ok&&res.headers.get('content-type')?.includes('application/json')){const d=await res.json();throw new Error(d.error?.message||'DeepSeek 错误');}
+  const reader=res.body.getReader(),dec=new TextDecoder();let full='',buf='';
+  while(true){const{done,value}=await reader.read();if(done)break;buf+=dec.decode(value,{stream:true});const lines=buf.split('\n');buf=lines.pop()||'';for(const line of lines){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')continue;try{const c=JSON.parse(d).choices?.[0]?.delta?.content;if(c)full+=c;}catch{}}}
+  if(!full)throw new Error('AI 未返回内容');return full;
 }
 function extractJson(raw){
   let c=raw.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/i,'').trim();
@@ -415,18 +307,15 @@ function extractJson(raw){
   try{return JSON.parse(c);}catch(err){try{c=c.replace(/:\s*'([^']*)'/g,':"$1"');c=c.replace(/,\s*([}\]])/g,'$1');return JSON.parse(c);}catch{throw new Error(`AI 格式异常，请重试（${err.message}）`);}}
 }
 
-// ════════════════════════════════════════════
-// CHAT
-// ════════════════════════════════════════════
+// ═══ CHAT ═══
 async function sendChat(){
   const input=document.getElementById('chat-input'),text=input.value.trim();if(!text||!settings.apiKey)return;
   addMsg('user',text);input.value='';chatHistory.push({role:'user',content:text});
   const btn=document.getElementById('send-btn');btn.disabled=true;btn.textContent='…';
-  const SYS=`你是CyberPaperboy的深度分析助手，服务出海企业战略与风控。以下是今日全球情报简报的原始数据：\n\n${briefContext}\n\n请基于上述信息进行深度分析。始终从出海企业视角出发，分析风险传导路径和应对建议。如果用户提到具体行业或地区，结合简报数据给出针对性建议。`;
-  try{const reply=await callDeepSeek({model:document.getElementById('model-select').value,max_tokens:2000,messages:[{role:'system',content:SYS},...chatHistory]});chatHistory.push({role:'assistant',content:reply});addMsg('assistant',reply);}catch(err){addMsg('assistant',`⚠ ${err.message}`);}
+  try{const reply=await callDeepSeek({model:document.getElementById('model-select').value,max_tokens:2000,messages:[{role:'system',content:`你是CyberPaperboy深度分析助手，服务出海企业风控。今日数据：\n${briefContext}\n\n从出海企业视角深度分析，给出风险传导和应对建议。`},...chatHistory]});chatHistory.push({role:'assistant',content:reply});addMsg('assistant',reply);}catch(err){addMsg('assistant',`⚠ ${err.message}`);}
   btn.disabled=false;btn.textContent='发送';
 }
-function addMsg(role,text){const msgs=document.getElementById('messages');const div=document.createElement('div');div.className=`msg ${role}`;div.innerHTML=`<div class="msg-role">${role==='user'?'YOU':'CPB'}</div><div class="msg-body">${esc(text).replace(/\n/g,'<br>')}</div>`;msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;}
+function addMsg(role,text){const msgs=document.getElementById('messages');const d=document.createElement('div');d.className=`msg ${role}`;d.innerHTML=`<div class="msg-role">${role==='user'?'YOU':'CPB'}</div><div class="msg-body">${esc(text).replace(/\n/g,'<br>')}</div>`;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
 function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 </script>
