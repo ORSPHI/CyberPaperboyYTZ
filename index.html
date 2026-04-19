@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CyberPaperboyYTZ</title>
+  <title>CyberPaperboy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -86,6 +86,7 @@
     .abtn{background:var(--ink);color:var(--paper);border:none;font-family:'IBM Plex Mono',monospace;font-size:11px;padding:8px 16px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;}
     .abtn:hover{background:var(--red);}
     #save-status{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);}
+
     /* Watchlist */
     #wl-countries{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;}
     .wl-ctab{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:4px 12px;cursor:pointer;border:1px solid var(--border);background:var(--paper);color:var(--mid);}
@@ -146,17 +147,18 @@
 
     footer{border-top:1px solid var(--border);padding:12px 40px;display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--light);}
     ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--paper-dark);}::-webkit-scrollbar-thumb{background:var(--mid);}
+
   </style>
 </head>
 <body>
 
 <header id="masthead">
   <div class="date-line" id="date-display"></div>
-  <h1>Cyber<span>Paperboy</span>YTZ</h1>
-  <div class="tagline">Global intelligence<br>daily dispatch v2</div>
+  <h1>Cyber<span>Paperboy</span></h1>
+  <div class="tagline">Global risk intelligence<br>daily dispatch</div>
 </header>
 
-<div id="ticker-bar"><span id="ticker-content">CyberPaperboyYTZ · 全球政经科技情报每日简报 · 点击「今日简报」获取最新内容 · 七大板块 · 企业观察名单 · 全球15大股市实时数据</span></div>
+<div id="ticker-bar"><span id="ticker-content">CyberPaperboy · 全球风险情报每日简报 · 点击「今日简报」获取最新内容 · 出海企业战略风控 · 全球15大股市数据</span></div>
 
 <!-- 股市数据条 -->
 <div id="market-strip"><span id="market-loading" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#555;padding:8px 16px;display:inline-block;">正在加载市场数据…</span></div>
@@ -174,7 +176,6 @@
       </select>
     </div>
   </div>
-
   <div id="failure-notice"></div>
 
   <!-- 设置面板 -->
@@ -188,7 +189,6 @@
       <button class="stab active" onclick="switchTab('rss')">📡 RSS 信源</button>
       <button class="stab" onclick="switchTab('watchlist')">🏢 企业观察名单</button>
     </div>
-
     <!-- RSS 标签页 -->
     <div id="tab-rss" class="stab-panel active">
       <div class="sg" style="margin-bottom:0">
@@ -201,7 +201,6 @@
         </div>
       </div>
     </div>
-
     <!-- 企业名单标签页 -->
     <div id="tab-watchlist" class="stab-panel">
       <div class="sg" style="margin-bottom:0">
@@ -232,55 +231,66 @@
     <h2>▸ 深度对话 · 基于今日简报</h2>
     <div id="messages"></div>
     <div id="chat-input-row">
-      <textarea id="chat-input" placeholder="基于今日简报，你想深入探讨什么？（Enter 发送，Shift+Enter 换行）" onkeydown="handleKey(event)"></textarea>
+      <textarea id="chat-input" placeholder="基于今日简报提问，例如：如果我是东南亚制造业出海团队，今天最该关注什么？（Enter 发送）" onkeydown="handleKey(event)"></textarea>
       <button id="send-btn" onclick="sendChat()">发送</button>
     </div>
   </div>
 </div>
 
 <footer>
-  <span>CyberPaperboyYTZ v2</span>
-  <span>DeepSeek API · 服务端 RSS（无缓存）· Stooq Data</span>
+  <span>CyberPaperboy v3</span>
+  <span>DeepSeek API · 多源 RSS · Stooq Data</span>
 </footer>
 
 <script>
 // ════════════════════════════════════════════
-// 默认 RSS 信源（25个，覆盖政府/外交/统计/财经/科技/亚洲/俄罗斯）
+// 默认 RSS 信源（分层体系：核心国际源 + 企业情报源 + 智库深度源）
 // ════════════════════════════════════════════
 const DEFAULT_FEEDS = [
-  // 综合国际
-  { label: 'Reuters World',        url: 'https://feeds.reuters.com/reuters/worldnews' },
-  { label: 'Reuters Business',     url: 'https://feeds.reuters.com/reuters/businessNews' },
+  // ── 第一层：核心国际媒体（已验证可用）──
   { label: 'BBC World News',       url: 'https://feeds.bbci.co.uk/news/world/rss.xml' },
   { label: 'Al Jazeera',           url: 'https://www.aljazeera.com/xml/rss/all.xml' },
   { label: 'The Guardian World',   url: 'https://www.theguardian.com/world/rss' },
-  { label: 'AP News',              url: 'https://rsshub.app/apnews/topics/apf-topnews' },
-  // 财经
   { label: 'WSJ World',            url: 'https://feeds.a.dj.com/rss/RSSWorldNews.xml' },
   { label: 'WSJ Markets',          url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml' },
   { label: 'Financial Times',      url: 'https://www.ft.com/rss/home' },
-  // 科技
+  { label: 'Nikkei Asia',          url: 'https://asia.nikkei.com/rss/feed/nar' },
+  { label: 'SCMP',                 url: 'https://www.scmp.com/rss/91/feed' },
+
+  // ── 第一层：科技（已验证可用）──
   { label: 'The Verge',            url: 'https://www.theverge.com/rss/index.xml' },
   { label: 'Ars Technica',         url: 'https://feeds.arstechnica.com/arstechnica/index' },
-  { label: '36氪',                 url: 'https://36kr.com/feed' },
   { label: 'Hacker News',          url: 'https://hnrss.org/frontpage' },
-  // 亚洲
-  { label: 'Nikkei Asia',          url: 'https://asia.nikkei.com/rss/feed/nar' },
-  { label: 'South China Morning Post', url: 'https://www.scmp.com/rss/91/feed' },
-  // 政府与外交
-  { label: 'US White House',       url: 'https://www.whitehouse.gov/feed/' },
-  { label: 'US State Dept',        url: 'https://www.state.gov/press-releases/feed/' },
+  { label: '36氪',                 url: 'https://36kr.com/feed' },
+
+  // ── 第一层：政府与官方（已验证可用）──
   { label: 'UK Government',        url: 'https://www.gov.uk/search/news-and-communications.atom' },
-  { label: 'EU Council',           url: 'https://www.consilium.europa.eu/en/press/press-releases/feed/' },
-  { label: 'Japan MOFA',           url: 'https://www.mofa.go.jp/rss/mofa.rss' },
-  // 统计局
-  { label: 'US BLS',               url: 'https://www.bls.gov/feed/bls_latest.rss' },
-  { label: 'UK ONS',               url: 'https://www.ons.gov.uk/news/news/rss' },
-  // 俄罗斯（英文渠道，不稳定时系统会标注失败）
   { label: 'TASS English',         url: 'https://tass.com/rss/v2.xml' },
-  // 中国
-  { label: '财新网',                url: 'https://www.caixin.com/rss20.xml' },
-  { label: '新华社经济',            url: 'https://rsshub.app/xinhua/finance' },
+
+  // ── 替换源：国际组织与政策机构（替代被封锁的政府源）──
+  { label: 'UN News',              url: 'https://news.un.org/feed/subscribe/en/news/all/rss.xml' },
+  { label: 'NATO News',            url: 'https://www.nato.int/cps/en/natohq/news.xml' },
+  { label: 'European Parliament',  url: 'https://www.europarl.europa.eu/rss/doc/top-stories/en.xml' },
+  { label: 'ECB Press',            url: 'https://www.ecb.europa.eu/rss/press.html' },
+  { label: 'FRED Economic Data',   url: 'https://research.stlouisfed.org/feeds/fred_news.xml' },
+  { label: 'IMF News',             url: 'https://www.imf.org/en/News/rss' },
+  { label: 'World Bank',           url: 'https://blogs.worldbank.org/feed' },
+  { label: 'Japan Times',          url: 'https://www.japantimes.co.jp/feed/' },
+  { label: 'Federal Register',     url: 'https://www.federalregister.gov/documents/search.atom?conditions%5Btype%5D=RULE' },
+
+  // ── 替换源：中文信源（RSSHub 替代路由）──
+  { label: '财联社电报',            url: 'https://rsshub.app/cls/telegraph' },
+  { label: '澎湃国际',             url: 'https://rsshub.app/thepaper/channel/25950' },
+
+  // ── 第二层：企业情报专用源（新增）──
+  { label: 'TechCrunch',           url: 'https://techcrunch.com/feed/' },
+  { label: 'GlobeNewsWire',        url: 'https://www.globenewswire.com/RssFeed/subjectcode/01-ACQ/feedTitle/GlobeNewsWire' },
+  { label: 'PR Newswire',          url: 'https://www.prnewswire.com/rss/news-releases-list.rss' },
+  { label: 'SEC EDGAR',            url: 'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=8-K&dateb=&owner=include&count=10&search_text=&action=getcompany&output=atom' },
+
+  // ── 第三层：智库深度分析源（新增）──
+  { label: 'Brookings',            url: 'https://www.brookings.edu/feed/' },
+  { label: 'CSIS Analysis',        url: 'https://www.csis.org/analysis/feed' },
 ];
 
 // ════════════════════════════════════════════
@@ -326,10 +336,10 @@ window.onload = () => {
 // ════════════════════════════════════════════
 function loadSettings() {
   try {
-    const s = localStorage.getItem('cpb_settings_v2');
+    const s = localStorage.getItem('cpb_settings_v3');
     settings = s ? JSON.parse(s) : { apiKey: '', feeds: DEFAULT_FEEDS, watchlist: DEFAULT_WATCHLIST };
-    if (!settings.feeds)     settings.feeds     = DEFAULT_FEEDS;
-    if (!settings.watchlist) settings.watchlist  = DEFAULT_WATCHLIST;
+    if (!settings.feeds) settings.feeds = DEFAULT_FEEDS;
+    if (!settings.watchlist) settings.watchlist = DEFAULT_WATCHLIST;
   } catch { settings = { apiKey: '', feeds: DEFAULT_FEEDS, watchlist: DEFAULT_WATCHLIST }; }
   document.getElementById('api-key-input').value = settings.apiKey || '';
   renderRssList();
@@ -337,10 +347,10 @@ function loadSettings() {
 }
 
 function saveSettings() {
-  settings.apiKey   = document.getElementById('api-key-input').value.trim();
-  settings.feeds    = collectRssRows();
+  settings.apiKey = document.getElementById('api-key-input').value.trim();
+  settings.feeds = collectRssRows();
   settings.watchlist = collectWatchlist();
-  localStorage.setItem('cpb_settings_v2', JSON.stringify(settings));
+  localStorage.setItem('cpb_settings_v3', JSON.stringify(settings));
   ['save-status','save-status2'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.textContent = '✓ 已保存'; setTimeout(() => el.textContent = '', 2000); }
@@ -388,13 +398,11 @@ function renderWatchlist() {
     tab.textContent = c;
     tab.onclick = () => switchWlCountry(c);
     tabs.appendChild(tab);
-
     const panel = document.createElement('div');
     panel.className = 'wl-country-panel' + (i === 0 ? ' active' : '');
     panel.id = `wlp-${c}`;
     panel.innerHTML = `<label>${c} · 企业列表（每行一家）</label><div class="wl-list" id="wll-${c}"></div>`;
     panels.appendChild(panel);
-
     const list = document.getElementById(`wll-${c}`);
     (settings.watchlist[c] || []).forEach(name => list.appendChild(makeWlRow(name)));
   });
@@ -478,21 +486,21 @@ async function fetchBrief() {
   try {
     const r = await fetch('/api/rss', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ feeds }) });
     const d = await r.json();
-    allItems     = d.items    || [];
-    rssFailures  = d.failures || [];
+    allItems = d.items || [];
+    rssFailures = d.failures || [];
   } catch (e) {
     btn.classList.remove('loading'); btn.textContent = '📰 今日简报';
     status.textContent = `⚠ RSS 抓取失败：${e.message}`; return;
   }
 
-  // 2. 同时获取最新股市数据（用于注入 prompt）
+  // 2. 同时获取最新股市数据
   let stockSummary = '（今日股市数据获取失败）';
   try {
-    const sr   = await fetch('/api/stocks');
-    const sd   = await sr.json();
+    const sr = await fetch('/api/stocks');
+    const sd = await sr.json();
     stockSummary = formatStockSummary(sd.markets || []);
-    renderMarketStrip(sd); // 刷新市场条
-  } catch { /* 静默，股市数据不影响主流程 */ }
+    renderMarketStrip(sd);
+  } catch { /* 静默 */ }
 
   // 3. 显示 RSS 抓取失败提示
   showFailureNotice(rssFailures);
@@ -501,7 +509,8 @@ async function fetchBrief() {
     btn.classList.remove('loading'); btn.textContent = '📰 今日简报';
     status.textContent = '⚠ 所有 RSS 源均失败，请检查信源或网络'; return;
   }
-  status.textContent = `已获取 ${allItems.length} 条信息，正在生成简报…`;
+
+  status.textContent = `已获取 ${allItems.length} 条信息，正在生成情报简报…`;
 
   // 4. 构建企业名单文本
   const wl = settings.watchlist || DEFAULT_WATCHLIST;
@@ -509,11 +518,11 @@ async function fetchBrief() {
     `${c}：${cos.join('、')}`
   ).join('\n');
 
-  // 5. 构建新闻文本
-const trimmedItems = allItems.slice(0, 15);
-const newsText = trimmedItems.map(i =>
-  `[${i.source}] ${i.title}${i.desc ? '\n' + i.desc.slice(0, 80) : ''}`
-).join('\n\n');
+  // 5. 构建新闻文本（扩大输入量：40条，每条描述60字）
+  const trimmedItems = allItems.slice(0, 40);
+  const newsText = trimmedItems.map(i =>
+    `[${i.source}] ${i.title}${i.desc ? '\n' + i.desc.slice(0, 60) : ''}`
+  ).join('\n\n');
 
   const today = new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric', weekday:'long' });
 
@@ -521,9 +530,9 @@ const newsText = trimmedItems.map(i =>
 
   try {
     const model = document.getElementById('model-select').value;
-    const raw   = await callDeepSeek({ model, max_tokens: 1800, messages: [
+    const raw   = await callDeepSeek({ model, max_tokens: 2800, messages: [
       { role: 'system', content: SYSTEM },
-      { role: 'user',   content: `今日原始新闻数据（共${allItems.length}条）：\n\n${newsText}` },
+      { role: 'user',   content: `今日原始新闻数据（共${allItems.length}条，展示前${trimmedItems.length}条）：\n\n${newsText}` },
     ]});
     const brief = extractJson(raw);
     briefContext = newsText + '\n\n【股市数据】\n' + stockSummary;
@@ -538,17 +547,34 @@ const newsText = trimmedItems.map(i =>
   }
 }
 
+// ════════════════════════════════════════════
+// SYSTEM PROMPT — 情报分析引擎
+// ════════════════════════════════════════════
 function buildSystemPrompt(today, watchlistText, stockSummary) {
-  return `你是CyberPaperboyYTZ，全球情报简报系统。今天是${today}。
+  return `你是CyberPaperboy，服务出海企业战略与风控的全球风险情报分析师。今天是${today}。
 
-企业观察名单：${watchlistText}
+【服务对象】初创出海企业战略部、风险研判岗位、国际业务负责人。
+【核心任务】从原始新闻中筛选对出海企业有实际影响的风险信号，按情报标准输出结构化分析。不是新闻摘要，而是风险情报。
 
-股市数据：${stockSummary}
+【企业观察名单】
+${watchlistText}
 
-严格只输出JSON，不含其他文字：
-{"headline":"今日一句话总结","lead":{"title":"头条标题","body":"分析100字"},"sections":[{"name":"宏观政策与政府决策","emoji":"🏛️","items":[{"title":"标题","body":"40字分析","source":"来源","en_original":null}]},{"name":"外交动态与关系网络","emoji":"🤝","items":[{"title":"[A]→[B]：动作","body":"40字分析","source":"来源","en_original":null}]},{"name":"科技与创新","emoji":"💡","items":[{"title":"标题","body":"40字分析","source":"来源","en_original":null}]},{"name":"财经与市场数据","emoji":"📊","items":[{"title":"标题","body":"40字含数字","source":"来源","en_original":null}]},{"name":"企业战略动向","emoji":"🏢","items":[{"title":"【企业】：动作","body":"40字分析","source":"来源","en_original":null}]}],"analyst_note":"跨板块关联分析80字","watchlist_alert":null}
+【全球市场数据】
+${stockSummary}
 
-要求：每板块3-4条，企业板块优先覆盖观察名单中有新闻的企业，某板块无新闻则items为[]。watchlist_alert仅在企业发生重大结构性变化时填写，否则为null。`;
+【合规边界】台湾相关只纳入官方统计和经济数据，不纳入政治声明性内容。所有内容以风险提示为导向，不做立场表达。
+
+严格只输出JSON，不含任何其他文字：
+{"headline":"一句话风险概要（面向出海企业视角）","lead":{"title":"头条标题","body":"150字深度分析：事件背景→核心变量→对出海企业的风险传导路径"},"sections":[{"name":"宏观政策与政府决策","emoji":"🏛️","items":[{"title":"标题（聚焦具体政策动作）","body":"60字：政策内容→影响范围→对企业经营环境的传导","source":"来源","en_original":null}]},{"name":"外交动态与关系网络","emoji":"🤝","items":[{"title":"[行为方]→[受动方]：具体动作","body":"60字：动作→意图推断→对贸易投资供应链的风险传导","source":"来源","en_original":null}]},{"name":"科技与创新","emoji":"💡","items":[{"title":"标题","body":"60字：技术动态→产业影响→供应链或竞争格局变化","source":"来源","en_original":null}]},{"name":"财经与市场数据","emoji":"📊","items":[{"title":"标题（含关键数字）","body":"60字含具体数据：数据变化→宏观含义→对资金流向或经营成本影响","source":"来源","en_original":null}]},{"name":"企业战略动向","emoji":"🏢","items":[{"title":"【企业名】：具体事件","body":"60字：事件性质→战略意图→行业信号","source":"来源","en_original":null}]}],"analyst_note":"120字跨板块关联分析：将今日事件与观察名单企业、行业趋势和地区风险绑定，指出出海企业应重点关注的2-3个风险节点","watchlist_alert":null}
+
+【分析标准】
+1.筛选标准：按对出海企业的影响程度和时间敏感度排序，不收录无风险信号的泛化新闻
+2.宏观板块：聚焦监管规则、出口管制、关税、投资审查、行业准入变化、关键人事任免、财政货币政策转向，每条分析政策到企业的传导路径
+3.外交板块：关注关系变化对贸易通道、投资环境、供应链的传导，细化到人对人、机构对机构层面
+4.财经板块：必须含具体数字，覆盖就业通胀外贸资金流向产业政策，不是泛化市场新闻
+5.企业板块：优先匹配观察名单，关注人事任免、财报、股东变化、战略调整、供应链重组、合规争议、并购分拆
+6.每板块4-6条，企业板块至少3条。某板块确实无相关新闻则items为[]
+7.watchlist_alert仅在观察名单企业发生重大结构性变化时填写，否则为null`;
 }
 
 function formatStockSummary(markets) {
@@ -602,13 +628,13 @@ function renderBrief(brief) {
   document.getElementById('brief-area').classList.add('visible');
   document.getElementById('chat-area').classList.add('visible');
   document.getElementById('messages').innerHTML = '';
-  addMsg('assistant', `简报已就绪。今日要点：${brief.headline||''}\n\n可就任何议题展开深度讨论。`);
+  addMsg('assistant', `简报已就绪。今日要点：${brief.headline||''}\n\n可就任何议题展开深度讨论，例如：某国政策变化对我的行业意味着什么？某家观察名单企业今天有何值得关注的动态？`);
 }
 
 function updateTicker(brief) {
   const titles = (brief.sections||[]).flatMap(s=>(s.items||[]).map(i=>i.title));
   document.getElementById('ticker-content').textContent =
-    `CyberPaperboyYTZ · ${brief.headline||''} · ` + titles.join(' · ');
+    `CyberPaperboy · ${brief.headline||''} · ` + titles.join(' · ');
 }
 
 function showFailureNotice(failures) {
@@ -661,25 +687,24 @@ async function callDeepSeek({ model, max_tokens, messages }) {
 }
 
 function extractJson(raw) {
-    let c = raw.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/i,'').trim();
-    const s = c.indexOf('{'), e = c.lastIndexOf('}');
-    if (s !== -1 && e !== -1) c = c.slice(s, e+1);
-    // 修复 LLM 常见 JSON 问题
-    c = c.replace(/,\s*([}\]])/g, '$1');           // 移除尾部逗号
-    c = c.replace(/(["\d\]}\w])\s*\n\s*"/g, '$1,"'); // 缺失逗号
-    c = c.replace(/[\x00-\x1F\x7F]/g, m => m === '\n' || m === '\r' || m === '\t' ? m : ''); // 控制字符
-    try { return JSON.parse(c); }
-    catch (err) {
-      // 二次尝试：更激进的修复
-      try {
-        c = c.replace(/:\s*'([^']*)'/g, ':"$1"');   // 单引号→双引号
-        c = c.replace(/(\w+)\s*:/g, '"$1":');        // 无引号key
-        c = c.replace(/,\s*([}\]])/g, '$1');         // 再清一次尾逗号
-        return JSON.parse(c);
-      } catch {
-        throw new Error(`AI 格式异常，请重试（${err.message}）`);
-      }
+  let c = raw.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/i,'').trim();
+  const s = c.indexOf('{'), e = c.lastIndexOf('}');
+  if (s !== -1 && e !== -1) c = c.slice(s, e+1);
+  // 修复 LLM 常见 JSON 问题
+  c = c.replace(/,\s*([}\]])/g, '$1');           // 尾部逗号
+  c = c.replace(/(["\d\]}\w])\s*\n\s*"/g, '$1,"'); // 缺失逗号
+  c = c.replace(/[\x00-\x1F\x7F]/g, m => m === '\n' || m === '\r' || m === '\t' ? m : ''); // 控制字符
+  try { return JSON.parse(c); }
+  catch (err) {
+    // 二次修复
+    try {
+      c = c.replace(/:\s*'([^']*)'/g, ':"$1"');
+      c = c.replace(/,\s*([}\]])/g, '$1');
+      return JSON.parse(c);
+    } catch {
+      throw new Error(`AI 格式异常，请重试（${err.message}）`);
     }
+  }
 }
 
 // ════════════════════════════════════════════
@@ -693,7 +718,7 @@ async function sendChat() {
   chatHistory.push({ role:'user', content:text });
   const btn = document.getElementById('send-btn');
   btn.disabled = true; btn.textContent = '…';
-  const SYS = `你是CyberPaperboyYTZ的深度分析助手。以下是今日全球情报简报的原始新闻数据及股市数据：\n\n${briefContext}\n\n请基于上述信息进行深度、有洞察力的分析。回答要有观点，不要泛泛而谈。`;
+  const SYS = `你是CyberPaperboy的深度分析助手，服务出海企业战略与风控。以下是今日全球情报简报的原始数据：\n\n${briefContext}\n\n请基于上述信息进行深度分析。始终从出海企业视角出发，分析风险传导路径和应对建议。如果用户提到具体行业或地区，结合简报数据给出针对性建议。`;
   try {
     const reply = await callDeepSeek({ model: document.getElementById('model-select').value, max_tokens: 2000, messages: [{ role:'system', content:SYS }, ...chatHistory] });
     chatHistory.push({ role:'assistant', content:reply });
