@@ -521,7 +521,7 @@ const newsText = trimmedItems.map(i =>
 
   try {
     const model = document.getElementById('model-select').value;
-    const raw   = await callDeepSeek({ model, max_tokens: 1200, messages: [
+    const raw   = await callDeepSeek({ model, max_tokens: 1800, messages: [
       { role: 'system', content: SYSTEM },
       { role: 'user',   content: `今日原始新闻数据（共${allItems.length}条）：\n\n${newsText}` },
     ]});
