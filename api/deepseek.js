@@ -19,22 +19,36 @@ export default async function handler(req, res) {
         model: model || 'deepseek-chat',
         max_tokens,
         messages,
-        stream: false,
+        stream: true,
       }),
-      signal: AbortSignal.timeout(55000),
     });
 
-    const text = await Promise.race([
-      upstream.text(),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('响应读取超时')), 54000)
-      ),
-    ]);
+    if (!upstream.ok) {
+      const errText = await upstream.text();
+      try { return res.status(upstream.status).json(JSON.parse(errText)); }
+      catch { return res.status(upstream.status).json({ error: { message: errText } }); }
+    }
 
-    const data = JSON.parse(text);
-    return res.status(upstream.status).json(data);
+    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('X-Accel-Buffering', 'no');
+
+    const reader = upstream.body.getReader();
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        res.write(value);
+      }
+    } finally {
+      reader.releaseLock();
+    }
+    res.end();
 
   } catch (err) {
-    return res.status(500).json({ error: { message: `代理错误: ${err.message}` } });
+    if (!res.headersSent) {
+      return res.status(500).json({ error: { message: `代理错误: ${err.message}` } });
+    }
+    res.end();
   }
 }
