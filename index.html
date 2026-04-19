@@ -661,11 +661,25 @@ async function callDeepSeek({ model, max_tokens, messages }) {
 }
 
 function extractJson(raw) {
-  let c = raw.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/i,'').trim();
-  const s = c.indexOf('{'), e = c.lastIndexOf('}');
-  if (s !== -1 && e !== -1) c = c.slice(s, e+1);
-  try { return JSON.parse(c); }
-  catch (err) { throw new Error(`AI 格式异常，请重试（${err.message}）`); }
+    let c = raw.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/i,'').trim();
+    const s = c.indexOf('{'), e = c.lastIndexOf('}');
+    if (s !== -1 && e !== -1) c = c.slice(s, e+1);
+    // 修复 LLM 常见 JSON 问题
+    c = c.replace(/,\s*([}\]])/g, '$1');           // 移除尾部逗号
+    c = c.replace(/(["\d\]}\w])\s*\n\s*"/g, '$1,"'); // 缺失逗号
+    c = c.replace(/[\x00-\x1F\x7F]/g, m => m === '\n' || m === '\r' || m === '\t' ? m : ''); // 控制字符
+    try { return JSON.parse(c); }
+    catch (err) {
+      // 二次尝试：更激进的修复
+      try {
+        c = c.replace(/:\s*'([^']*)'/g, ':"$1"');   // 单引号→双引号
+        c = c.replace(/(\w+)\s*:/g, '"$1":');        // 无引号key
+        c = c.replace(/,\s*([}\]])/g, '$1');         // 再清一次尾逗号
+        return JSON.parse(c);
+      } catch {
+        throw new Error(`AI 格式异常，请重试（${err.message}）`);
+      }
+    }
 }
 
 // ════════════════════════════════════════════
