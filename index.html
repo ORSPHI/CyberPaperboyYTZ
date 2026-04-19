@@ -539,84 +539,16 @@ const newsText = trimmedItems.map(i =>
 }
 
 function buildSystemPrompt(today, watchlistText, stockSummary) {
-  return `你是CyberPaperboyYTZ，一个服务于深度战略分析师的全球情报简报系统。今天是${today}。
+  return `你是CyberPaperboyYTZ，全球情报简报系统。今天是${today}。
 
-【企业观察名单】（在「企业战略动向」板块中必须优先覆盖有新闻的企业）：
-${watchlistText}
+企业观察名单：${watchlistText}
 
-【今日全球股市收盘/最新数据】：
-${stockSummary}
+股市数据：${stockSummary}
 
-请将提供的RSS新闻数据和上述数据整理成每日简报。严格只输出以下JSON，不含任何其他文字，不使用markdown代码块：
-{
-  "headline": "今日最重要的一句话总结（20字以内）",
-  "lead": {
-    "title": "今日头条标题",
-    "body": "头条详细分析150字，要有洞察，不只是复述新闻"
-  },
-  "sections": [
-    {
-      "name": "宏观政策与政府决策",
-      "emoji": "🏛️",
-      "items": [
-        {"title": "条目标题", "body": "50-80字中文分析", "source": "来源", "en_original": "如有统计数字或政策原文，保留英文关键语句，无则填null"}
-      ]
-    },
-    {
-      "name": "外交动态与关系网络",
-      "emoji": "🤝",
-      "items": [
-        {"title": "[国家A]→[国家B]：核心动作", "body": "50-80字，明确写出谁与谁互动、说了什么、潜在影响", "source": "来源", "en_original": "保留外交声明关键原文或null"}
-      ]
-    },
-    {
-      "name": "地缘政治与安全",
-      "emoji": "⚔️",
-      "items": [
-        {"title": "条目标题", "body": "50-80字分析", "source": "来源", "en_original": null}
-      ]
-    },
-    {
-      "name": "科技与创新",
-      "emoji": "💡",
-      "items": [
-        {"title": "条目标题", "body": "50-80字分析", "source": "来源", "en_original": null}
-      ]
-    },
-    {
-      "name": "财经与市场数据",
-      "emoji": "📊",
-      "items": [
-        {"title": "条目标题", "body": "50-80字，市场数据务必包含具体数字", "source": "来源", "en_original": "保留关键统计数字原文或null"}
-      ]
-    },
-    {
-      "name": "企业战略动向",
-      "emoji": "🏢",
-      "items": [
-        {"title": "【企业名】：动作摘要", "body": "50-80字，重点写战略意图、决策背景、行业影响", "source": "来源", "en_original": null}
-      ]
-    }
-  ],
-  "analyst_note": "分析师按语：今日最值得关注的跨板块深层关联，120字，点出不同板块信息之间的内在逻辑与隐含趋势",
-  "watchlist_alert": null
-}
+严格只输出JSON，不含其他文字：
+{"headline":"今日一句话总结","lead":{"title":"头条标题","body":"分析100字"},"sections":[{"name":"宏观政策与政府决策","emoji":"🏛️","items":[{"title":"标题","body":"40字分析","source":"来源","en_original":null}]},{"name":"外交动态与关系网络","emoji":"🤝","items":[{"title":"[A]→[B]：动作","body":"40字分析","source":"来源","en_original":null}]},{"name":"科技与创新","emoji":"💡","items":[{"title":"标题","body":"40字分析","source":"来源","en_original":null}]},{"name":"财经与市场数据","emoji":"📊","items":[{"title":"标题","body":"40字含数字","source":"来源","en_original":null}]},{"name":"企业战略动向","emoji":"🏢","items":[{"title":"【企业】：动作","body":"40字分析","source":"来源","en_original":null}]}],"analyst_note":"跨板块关联分析80字","watchlist_alert":null}
 
-各板块要求：
-1. 宏观政策：政府政策、央行决定、统计局数据，3-6条，重点关注中美英法德日俄台韩
-2. 外交动态：专追中国、美国、英国、法国、德国、日本、台湾、朝鲜、韩国、俄罗斯之间的互动，标题用[A]→[B]：动作格式，3-6条
-3. 地缘政治：冲突、制裁、军事、安全，3-5条
-4. 科技创新：技术突破、AI、半导体、能源转型，3-6条
-5. 财经市场：结合提供的股市数据，给出市场整体判断，纳入重要经济数据，3-6条
-6. 企业动向：必须优先覆盖观察名单中有新闻的企业，同时纳入名单外的重大企业新闻，4-8条
-
-watchlist_alert规则（满足以下任一条件时填写说明，否则设为null）：
-- 名单内某企业发生破产/被收购/重组等结构性事件
-- 某行业因政策大幅调整导致名单代表性明显下降
-- 某新兴企业战略重要性已明显超越名单内同类企业
-满足条件时，说明具体是哪家企业、哪个国家、建议如何调整，100字以内。
-
-某板块若无相关新闻则items设为空数组[]。`;
+要求：每板块3-4条，企业板块优先覆盖观察名单中有新闻的企业，某板块无新闻则items为[]。watchlist_alert仅在企业发生重大结构性变化时填写，否则为null。`;
 }
 
 function formatStockSummary(markets) {
