@@ -1,5 +1,4 @@
-// api/stocks.js — 全球市场体征数据（股指 + 商品 + 汇率 + 风险指标）
-// 策略：Stooq 批量请求 → Yahoo v8 补救
+// api/stocks.js — 全球市场体征（15股指 + 10商品 + 5汇率 + VIX）
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -8,152 +7,106 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const MARKETS = [
-    // ── 股指（15个）──
-    { stooq: '^spx',   yahoo: '^GSPC',      name: 'S&P 500',     zh: '标普500',   flag: 'US', cat: 'idx' },
-    { stooq: '^ndq',   yahoo: '^IXIC',      name: 'NASDAQ',      zh: '纳斯达克',  flag: 'US', cat: 'idx' },
-    { stooq: '^ukx',   yahoo: '^FTSE',      name: 'FTSE 100',    zh: '伦敦',     flag: 'GB', cat: 'idx' },
-    { stooq: '^nkx',   yahoo: '^N225',      name: 'Nikkei 225',  zh: '东京',     flag: 'JP', cat: 'idx' },
-    { stooq: '^shc',   yahoo: '000001.SS',  name: '上证综指',     zh: '上海',     flag: 'CN', cat: 'idx' },
-    { stooq: '^szc',   yahoo: '399001.SZ',  name: '深证成指',     zh: '深圳',     flag: 'CN', cat: 'idx' },
-    { stooq: '^hsi',   yahoo: '^HSI',       name: 'HSI',         zh: '香港',     flag: 'HK', cat: 'idx' },
-    { stooq: '^sx5e',  yahoo: '^STOXX50E',  name: 'EURO STOXX',  zh: '泛欧',     flag: 'EU', cat: 'idx' },
-    { stooq: '^dax',   yahoo: '^GDAXI',     name: 'DAX',         zh: '法兰克福',  flag: 'DE', cat: 'idx' },
-    { stooq: '^tsx',   yahoo: '^GSPTSE',    name: 'TSX',         zh: '多伦多',    flag: 'CA', cat: 'idx' },
-    { stooq: '^sen',   yahoo: '^BSESN',     name: 'BSE SENSEX',  zh: '孟买',     flag: 'IN', cat: 'idx' },
-    { stooq: '^kospi', yahoo: '^KS11',      name: 'KOSPI',       zh: '首尔',     flag: 'KR', cat: 'idx' },
-    { stooq: '^xjo',   yahoo: '^AXJO',      name: 'ASX 200',     zh: '悉尼',     flag: 'AU', cat: 'idx' },
-    { stooq: '^sti',   yahoo: '^STI',       name: 'STI',         zh: '新加坡',    flag: 'SG', cat: 'idx' },
-    { stooq: '^twii',  yahoo: '^TWII',      name: 'TWII',        zh: '台北',     flag: 'TW', cat: 'idx' },
-    // ── 大宗商品 ──
-    { stooq: 'xauusd', yahoo: 'GC=F',       name: 'Gold',        zh: '黄金',     flag: '',   cat: 'cmd' },
-    { stooq: 'cl.f',   yahoo: 'CL=F',       name: 'WTI Crude',   zh: '原油WTI',  flag: '',   cat: 'cmd' },
-    { stooq: 'ng.f',   yahoo: 'NG=F',       name: 'Natural Gas',  zh: '天然气',   flag: '',   cat: 'cmd' },
-    // ── 汇率 ──
-    { stooq: 'dx.f',   yahoo: 'DX-Y.NYB',   name: 'DXY',         zh: '美元指数',  flag: '',   cat: 'fx' },
-    { stooq: 'eurusd', yahoo: 'EURUSD=X',   name: 'EUR/USD',     zh: '欧元/美元', flag: '',   cat: 'fx' },
-    { stooq: 'usdcny', yahoo: 'CNY=X',      name: 'USD/CNY',     zh: '美元/人民币',flag: '',  cat: 'fx' },
-    // ── 风险指标 ──
-    { stooq: '^vix',   yahoo: '^VIX',       name: 'VIX',         zh: '恐慌指数',  flag: '',   cat: 'risk' },
+    // ── 股指 15 ──
+    { stooq: '^spx',   yahoo: '^GSPC',     zh: '标普500',    cat: 'idx', name: 'S&P 500' },
+    { stooq: '^ndq',   yahoo: '^IXIC',     zh: '纳斯达克',   cat: 'idx', name: 'NASDAQ' },
+    { stooq: '^ukx',   yahoo: '^FTSE',     zh: '伦敦',      cat: 'idx', name: 'FTSE 100' },
+    { stooq: '^nkx',   yahoo: '^N225',     zh: '东京',      cat: 'idx', name: 'Nikkei' },
+    { stooq: '^shc',   yahoo: '000001.SS', zh: '上海',      cat: 'idx', name: 'SSE' },
+    { stooq: '^szc',   yahoo: '399001.SZ', zh: '深圳',      cat: 'idx', name: 'SZSE' },
+    { stooq: '^hsi',   yahoo: '^HSI',      zh: '香港',      cat: 'idx', name: 'HSI' },
+    { stooq: '^sx5e',  yahoo: '^STOXX50E', zh: '泛欧',      cat: 'idx', name: 'STOXX50' },
+    { stooq: '^dax',   yahoo: '^GDAXI',    zh: '法兰克福',   cat: 'idx', name: 'DAX' },
+    { stooq: '^tsx',   yahoo: '^GSPTSE',   zh: '多伦多',     cat: 'idx', name: 'TSX' },
+    { stooq: '^sen',   yahoo: '^BSESN',    zh: '孟买',      cat: 'idx', name: 'SENSEX' },
+    { stooq: '^kospi', yahoo: '^KS11',     zh: '首尔',      cat: 'idx', name: 'KOSPI' },
+    { stooq: '^xjo',   yahoo: '^AXJO',     zh: '悉尼',      cat: 'idx', name: 'ASX200' },
+    { stooq: '^sti',   yahoo: '^STI',      zh: '新加坡',     cat: 'idx', name: 'STI' },
+    { stooq: '^twii',  yahoo: '^TWII',     zh: '台北',      cat: 'idx', name: 'TWII' },
+    // ── 大宗商品 10 ──
+    { stooq: 'xauusd', yahoo: 'GC=F',      zh: '黄金',      cat: 'cmd', name: 'Gold' },
+    { stooq: 'xagusd', yahoo: 'SI=F',      zh: '白银',      cat: 'cmd', name: 'Silver' },
+    { stooq: 'cl.f',   yahoo: 'CL=F',      zh: '原油WTI',   cat: 'cmd', name: 'WTI' },
+    { stooq: 'cb.f',   yahoo: 'BZ=F',      zh: '布伦特',     cat: 'cmd', name: 'Brent' },
+    { stooq: 'ng.f',   yahoo: 'NG=F',      zh: '天然气',     cat: 'cmd', name: 'NatGas' },
+    { stooq: 'hg.f',   yahoo: 'HG=F',      zh: '铜',        cat: 'cmd', name: 'Copper' },
+    { stooq: 'zs.f',   yahoo: 'ZS=F',      zh: '大豆',      cat: 'cmd', name: 'Soybean' },
+    { stooq: 'zw.f',   yahoo: 'ZW=F',      zh: '小麦',      cat: 'cmd', name: 'Wheat' },
+    { stooq: 'zc.f',   yahoo: 'ZC=F',      zh: '玉米',      cat: 'cmd', name: 'Corn' },
+    { stooq: 'ct.f',   yahoo: 'CT=F',      zh: '棉花',      cat: 'cmd', name: 'Cotton' },
+    // ── 汇率 5 ──
+    { stooq: 'dx.f',   yahoo: 'DX-Y.NYB',  zh: '美元指数',   cat: 'fx',  name: 'DXY' },
+    { stooq: 'eurusd', yahoo: 'EURUSD=X',  zh: '欧元/美元',  cat: 'fx',  name: 'EUR/USD' },
+    { stooq: 'usdcny', yahoo: 'CNY=X',     zh: '美元/人民币', cat: 'fx',  name: 'USD/CNY' },
+    { stooq: 'usdjpy', yahoo: 'JPY=X',     zh: '美元/日元',  cat: 'fx',  name: 'USD/JPY' },
+    { stooq: 'gbpusd', yahoo: 'GBPUSD=X',  zh: '英镑/美元',  cat: 'fx',  name: 'GBP/USD' },
+    // ── 风险 1 ──
+    { stooq: '^vix',   yahoo: '^VIX',      zh: '恐慌指数',   cat: 'risk', name: 'VIX' },
   ];
 
   try {
-    // ═══ Stooq 批量请求 ═══
     const stooqData = {};
     try {
       const symbols = MARKETS.map(m => m.stooq).join(';');
-      const url = `https://stooq.com/q/l/?s=${encodeURIComponent(symbols)}&f=sd2t2ohlcv&h&e=csv`;
-      const csv = await fetchText(url, 12000);
+      const csv = await fetchText(`https://stooq.com/q/l/?s=${encodeURIComponent(symbols)}&f=sd2t2ohlcv&h&e=csv`, 12000);
       if (csv) {
         const lines = csv.trim().split('\n').map(l => l.trim()).filter(Boolean);
         for (let i = 1; i < lines.length; i++) {
-          const cols = lines[i].split(',');
-          if (cols.length < 7) continue;
-          const sym   = (cols[0] || '').trim().toUpperCase();
-          const date  = (cols[1] || '').trim();
-          const time  = (cols[2] || '').trim();
-          const open  = toNum(cols[3]);
-          const close = toNum(cols[6]);
+          const c = lines[i].split(',');
+          if (c.length < 7) continue;
+          const sym = (c[0] || '').trim().toUpperCase();
+          const close = toNum(c[6]);
           if (close == null) continue;
-          stooqData[sym] = { date, time, open, close };
+          stooqData[sym] = { date: (c[1]||'').trim(), time: (c[2]||'').trim(), open: toNum(c[3]), close };
         }
       }
     } catch {}
 
-    // ═══ 组装结果 ═══
     const results = [];
     const needYahoo = [];
-
     for (const m of MARKETS) {
-      const key = m.stooq.toUpperCase();
-      const sd = stooqData[key];
+      const sd = stooqData[m.stooq.toUpperCase()];
       if (sd && sd.close != null) {
-        let change = 0, changePct = 0;
-        if (sd.open != null && sd.open !== 0) {
-          change = sd.close - sd.open;
-          changePct = (change / sd.open) * 100;
-        }
-        results.push({
-          symbol: m.stooq, name: m.name, zh: m.zh, flag: m.flag, cat: m.cat,
-          price: sd.close, change: r2(change), changePct: r2(changePct),
-          prevClose: sd.open, state: isToday(sd.date) ? 'REGULAR' : 'CLOSED',
-          currency: '', ts: `${sd.date} ${sd.time}`,
-        });
+        let ch = 0, pct = 0;
+        if (sd.open && sd.open !== 0) { ch = sd.close - sd.open; pct = (ch / sd.open) * 100; }
+        results.push({ symbol: m.stooq, name: m.name, zh: m.zh, cat: m.cat, price: sd.close, change: r2(ch), changePct: r2(pct), prevClose: sd.open, state: isToday(sd.date) ? 'REGULAR' : 'CLOSED', currency: '', ts: `${sd.date} ${sd.time}` });
       } else {
         needYahoo.push({ idx: results.length, market: m });
-        results.push({ symbol: m.stooq, name: m.name, zh: m.zh, flag: m.flag, cat: m.cat, error: true });
+        results.push({ symbol: m.stooq, name: m.name, zh: m.zh, cat: m.cat, error: true });
       }
     }
 
-    // ═══ Yahoo v8 补救 ═══
     if (needYahoo.length > 0) {
-      const yahooResults = await Promise.all(
-        needYahoo.map(({ market }) => fetchYahoo(market.yahoo).catch(() => null))
-      );
+      const yr = await Promise.all(needYahoo.map(({ market }) => fetchYahoo(market.yahoo).catch(() => null)));
       for (let i = 0; i < needYahoo.length; i++) {
-        const yd = yahooResults[i];
-        if (yd) {
-          const m = needYahoo[i].market;
-          results[needYahoo[i].idx] = {
-            symbol: m.yahoo, name: m.name, zh: m.zh, flag: m.flag, cat: m.cat, ...yd,
-          };
-        }
+        if (yr[i]) { const m = needYahoo[i].market; results[needYahoo[i].idx] = { symbol: m.yahoo, name: m.name, zh: m.zh, cat: m.cat, ...yr[i] }; }
       }
     }
-
     return res.status(200).json({ markets: results, fetchedAt: new Date().toISOString() });
   } catch (err) {
-    return res.status(200).json({
-      markets: MARKETS.map(m => ({ symbol: m.stooq, name: m.name, zh: m.zh, flag: m.flag, cat: m.cat, error: true })),
-      error: err.message, fetchedAt: new Date().toISOString(),
-    });
+    return res.status(200).json({ markets: MARKETS.map(m => ({ symbol: m.stooq, name: m.name, zh: m.zh, cat: m.cat, error: true })), error: err.message, fetchedAt: new Date().toISOString() });
   }
 }
 
 async function fetchYahoo(symbol) {
   for (const host of ['query2.finance.yahoo.com', 'query1.finance.yahoo.com']) {
     try {
-      const url = `https://${host}/v8/finance/chart/${encodeURIComponent(symbol)}?range=2d&interval=1d`;
-      const text = await fetchText(url, 8000, {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-        'Accept': 'application/json',
-      });
-      const data = JSON.parse(text);
-      const meta = data?.chart?.result?.[0]?.meta;
+      const text = await fetchText(`https://${host}/v8/finance/chart/${encodeURIComponent(symbol)}?range=2d&interval=1d`, 8000, { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36', 'Accept': 'application/json' });
+      const meta = JSON.parse(text)?.chart?.result?.[0]?.meta;
       if (!meta || meta.regularMarketPrice == null) continue;
-      const price = meta.regularMarketPrice;
-      const prev = meta.chartPreviousClose || meta.previousClose || 0;
-      let change = 0, changePct = 0;
-      if (prev > 0) { change = price - prev; changePct = (change / prev) * 100; }
-      return {
-        price, change: r2(change), changePct: r2(changePct), prevClose: prev,
-        state: meta.marketState || 'CLOSED', currency: meta.currency || '',
-        ts: meta.regularMarketTime ? new Date(meta.regularMarketTime * 1000).toISOString() : '',
-      };
+      const p = meta.regularMarketPrice, prev = meta.chartPreviousClose || meta.previousClose || 0;
+      let ch = 0, pct = 0; if (prev > 0) { ch = p - prev; pct = (ch / prev) * 100; }
+      return { price: p, change: r2(ch), changePct: r2(pct), prevClose: prev, state: meta.marketState || 'CLOSED', currency: meta.currency || '', ts: meta.regularMarketTime ? new Date(meta.regularMarketTime * 1000).toISOString() : '' };
     } catch { continue; }
   }
   return null;
 }
 
 async function fetchText(url, ms, extraH = {}) {
-  const ac = new AbortController();
-  const t = setTimeout(() => ac.abort(), ms);
-  try {
-    const r = await fetch(url, {
-      signal: ac.signal,
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': '*/*', ...extraH },
-    });
-    clearTimeout(t);
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    return await r.text();
-  } catch (e) { clearTimeout(t); throw e; }
+  const ac = new AbortController(); const t = setTimeout(() => ac.abort(), ms);
+  try { const r = await fetch(url, { signal: ac.signal, headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': '*/*', ...extraH } }); clearTimeout(t); if (!r.ok) throw new Error(`HTTP ${r.status}`); return await r.text(); }
+  catch (e) { clearTimeout(t); throw e; }
 }
-
-function toNum(v) {
-  if (!v || !v.trim() || v.trim().toUpperCase() === 'N/D') return null;
-  const n = Number(v.trim()); return isNaN(n) ? null : n;
-}
+function toNum(v) { if (!v || !v.trim() || v.trim().toUpperCase() === 'N/D') return null; const n = Number(v.trim()); return isNaN(n) ? null : n; }
 function r2(n) { return Math.round(n * 100) / 100; }
-function isToday(ds) {
-  try { return (ds||'').replace(/-/g,'') === new Date().toISOString().slice(0,10).replace(/-/g,''); }
-  catch { return false; }
-}
+function isToday(ds) { try { return (ds || '').replace(/-/g, '') === new Date().toISOString().slice(0, 10).replace(/-/g, ''); } catch { return false; } }
