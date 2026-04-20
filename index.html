@@ -151,10 +151,6 @@ const DEFAULT_FEEDS = [
   { label: 'Foreign Policy',       url: 'https://foreignpolicy.com/feed/' },
   { label: 'Politico',             url: 'https://www.politico.com/rss/politicopicks.xml' },
   { label: 'Asia Times',           url: 'https://asiatimes.com/feed/' },
-  // ── 欧盟/美国官方政策源（新增）──
-  { label: 'USTR Press',           url: 'https://ustr.gov/about-us/policy-offices/press-office/press-releases/rss' },
-  { label: 'EU DG GROW',           url: 'https://single-market-economy.ec.europa.eu/news/rss_en' },
-  { label: 'EUR-Lex New Acts',     url: 'https://eur-lex.europa.eu/EN/display-feed.rss?myRssId=e2JOQXB2' },
 ];
 const DEFAULT_WATCHLIST = {
   '中国': ['宁德时代','比亚迪','华为','阿里巴巴','腾讯','字节跳动','中国石油','中国工商银行','中国移动','中芯国际','大疆','小米','美团','京东','百度','中远海运','国家电网','中国中车','中国建筑','恒生电子'],
@@ -246,14 +242,14 @@ function fmtMkt(markets){
   return ps.join(' ');
 }
 function fmtMacro(d){
-  if(!d)return'';let parts=[];
-  if(d.us&&Object.keys(d.us).length){parts.push('[美国]');for(const[k,v]of Object.entries(d.us)){if(k==='_note'||!v.value)continue;const ch=v.change!=null?(v.change>=0?'↑':'↓')+Math.abs(v.change):'';parts.push(`${v.name}:${v.value}${v.unit}${ch?' '+ch:''}(${v.date||''})`);};}
-  if(d.eu&&Object.keys(d.eu).length){parts.push('[欧元区]');for(const[k,v]of Object.entries(d.eu)){if(!v.value)continue;const ch=v.change!=null?(v.change>=0?'↑':'↓')+Math.abs(v.change):'';parts.push(`${v.name}:${v.value}${v.unit}${ch?' '+ch:''}(${v.date||''})`);};}
-  return parts.join(' ');
+  if(!d)return'';let p=[];
+  if(d.us){for(const[k,v]of Object.entries(d.us)){if(k==='_note'||!v.value)continue;p.push(`${v.name}${v.value}${v.unit}`);}}
+  if(d.eu){for(const[k,v]of Object.entries(d.eu)){if(!v.value)continue;p.push(`${v.name}${v.value}${v.unit}`);}}
+  return p.join(' ');
 }
 function fmtReg(items){
   if(!items||!items.length)return'';
-  return items.slice(0,5).map(i=>`[${i.type}] ${i.title}${i.agencies?' ('+i.agencies+')':''}(${i.date})`).join(' | ');
+  return items.slice(0,3).map(i=>i.title.slice(0,60)).join('; ');
 }
 
 // ═══ RENDER（含号外按钮）═══
