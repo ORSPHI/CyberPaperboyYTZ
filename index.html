@@ -121,7 +121,7 @@
   <div id="brief-area"><div id="watchlist-alert"><div class="wa-head">🔔 企业名单调整建议</div><div class="wa-body" id="wa-body"></div></div><div id="brief-content"></div></div>
   <div id="chat-area"><h2>▸ 深度对话 · 基于今日简报</h2><div id="messages"></div><div id="chat-input-row"><textarea id="chat-input" placeholder="例如：如果我是东南亚制造业出海团队，今天最该关注什么？（Enter 发送）" onkeydown="handleKey(event)"></textarea><button id="send-btn" onclick="sendChat()">发送</button></div></div>
 </div>
-<footer><span>CyberPaperboy v7</span><span>DeepSeek API · 多源 RSS · Stooq / Yahoo Finance</span></footer>
+<footer><span>CyberPaperboy v8</span><span>DeepSeek API · 多源 RSS · FRED / Eurostat · Stooq / Yahoo</span></footer>
 
 <script>
 const DEFAULT_FEEDS = [
@@ -165,8 +165,8 @@ const DEFAULT_WATCHLIST = {
 };
 let briefContext='',chatHistory=[],settings={},activeWlCountry=Object.keys(DEFAULT_WATCHLIST)[0],lastBrief=null;
 window.onload=()=>{document.getElementById('date-display').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});loadSettings();if(!settings.apiKey){document.getElementById('settings-panel').classList.add('visible');document.getElementById('status-text').textContent='⚠ 请先填入 API Key';}loadMarkets();};
-function loadSettings(){try{const s=localStorage.getItem('cpb_v7');settings=s?JSON.parse(s):{apiKey:'',feeds:DEFAULT_FEEDS,watchlist:DEFAULT_WATCHLIST};if(!settings.feeds)settings.feeds=DEFAULT_FEEDS;if(!settings.watchlist)settings.watchlist=DEFAULT_WATCHLIST;}catch{settings={apiKey:'',feeds:DEFAULT_FEEDS,watchlist:DEFAULT_WATCHLIST};}document.getElementById('api-key-input').value=settings.apiKey||'';renderRssList();renderWatchlist();}
-function saveSettings(){settings.apiKey=document.getElementById('api-key-input').value.trim();settings.feeds=collectRssRows();settings.watchlist=collectWatchlist();localStorage.setItem('cpb_v7',JSON.stringify(settings));['save-status','save-status2'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='✓ 已保存';setTimeout(()=>el.textContent='',2000);}});document.getElementById('settings-panel').classList.remove('visible');if(settings.apiKey)document.getElementById('status-text').textContent='就绪 · 点击获取今日情报';}
+function loadSettings(){try{const s=localStorage.getItem('cpb_v8');settings=s?JSON.parse(s):{apiKey:'',feeds:DEFAULT_FEEDS,watchlist:DEFAULT_WATCHLIST};if(!settings.feeds)settings.feeds=DEFAULT_FEEDS;if(!settings.watchlist)settings.watchlist=DEFAULT_WATCHLIST;}catch{settings={apiKey:'',feeds:DEFAULT_FEEDS,watchlist:DEFAULT_WATCHLIST};}document.getElementById('api-key-input').value=settings.apiKey||'';renderRssList();renderWatchlist();}
+function saveSettings(){settings.apiKey=document.getElementById('api-key-input').value.trim();settings.feeds=collectRssRows();settings.watchlist=collectWatchlist();localStorage.setItem('cpb_v8',JSON.stringify(settings));['save-status','save-status2'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='✓ 已保存';setTimeout(()=>el.textContent='',2000);}});document.getElementById('settings-panel').classList.remove('visible');if(settings.apiKey)document.getElementById('status-text').textContent='就绪 · 点击获取今日情报';}
 function toggleSettings(){document.getElementById('settings-panel').classList.toggle('visible');}
 function switchTab(n){document.querySelectorAll('.stab').forEach((t,i)=>t.classList.toggle('active',['rss','watchlist'][i]===n));document.querySelectorAll('.stab-panel').forEach(p=>p.classList.remove('active'));document.getElementById(`tab-${n}`).classList.add('active');}
 function renderRssList(){const l=document.getElementById('rss-list');l.innerHTML='';(settings.feeds||DEFAULT_FEEDS).forEach(f=>l.appendChild(makeRssRow(f.label,f.url)));}
@@ -205,8 +205,9 @@ async function fetchBrief(){
   let allItems=[],rssF=[];
   try{const d=await(await fetch('/api/rss',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({feeds})})).json();allItems=d.items||[];rssF=d.failures||[];}
   catch(e){btn.classList.remove('loading');btn.textContent='📰 我要买报';st.textContent=`⚠ ${e.message}`;return;}
-  let mktSum='';
+  let mktSum='',macroSum='';
   try{const sd=await(await fetch('/api/stocks')).json();mktSum=fmtMkt(sd.markets||[]);renderMarketStrip(sd);}catch{}
+  try{const md=await(await fetch('/api/macro')).json();macroSum=fmtMacro(md);}catch{}
   showFailureNotice(rssF);
   if(!allItems.length){btn.classList.remove('loading');btn.textContent='📰 我要买报';st.textContent='⚠ 所有信源失败';return;}
   st.textContent=`已获取 ${allItems.length} 条，生成情报中…`;
@@ -219,7 +220,7 @@ async function fetchBrief(){
     const raw=await callDeepSeek({max_tokens:1800,messages:[
       {role:'system',content:`你是CyberPaperboy，出海企业全球风险情报分析师。${today}。
 观察名单：${wlText}
-市场：${mktSum}
+市场：${mktSum}${macroSum?'\n宏观指标：'+macroSum:''}
 台湾只纳入经济数据。严格只输出JSON：
 {"headline":"25字以内今日核心风险概要","lead":{"title":"具体事件标题不要写头条二字","body":"80字背景→传导→影响"},"sections":[{"name":"宏观政策与政府决策","emoji":"🏛️","items":[{"title":"标题","body":"40字含传导","source":"来源","en_original":null}]},{"name":"外交动态与关系网络","emoji":"🤝","items":[{"title":"[A]→[B]：动作","body":"40字含风险","source":"来源","en_original":null}]},{"name":"科技与创新","emoji":"💡","items":[{"title":"标题","body":"40字含影响","source":"来源","en_original":null}]},{"name":"财经与市场数据","emoji":"📊","items":[{"title":"含数字","body":"40字含数据","source":"来源","en_original":null}]},{"name":"企业战略动向","emoji":"🏢","items":[{"title":"【企业】：事件","body":"40字含信号","source":"来源","en_original":null}]}],"analyst_note":"80字跨板块关联分析绑定观察名单","watchlist_alert":null}
 每板块3条，企业至少3条。聚焦出海企业风险信号。`},
@@ -227,7 +228,7 @@ async function fetchBrief(){
     ]});
     const brief=extractJson(raw);
     lastBrief=brief;
-    briefContext=newsText+'\n\n【市场】\n'+mktSum;chatHistory=[];renderBrief(brief);updateTicker(brief);
+    briefContext=newsText+'\n\n【市场】\n'+mktSum+(macroSum?'\n\n【宏观指标】\n'+macroSum:'');chatHistory=[];renderBrief(brief);updateTicker(brief);
     btn.classList.remove('loading');btn.textContent='🔄 再来一份';
     st.textContent=`✓ 简报已送达 · ${new Date().toLocaleTimeString('zh-CN')} · ${allItems.length} 条`;
   }catch(err){btn.classList.remove('loading');btn.textContent='📰 我要买报';st.textContent=`⚠ ${err.message}`;console.error('[CPB]',err);}
@@ -238,6 +239,27 @@ function fmtMkt(markets){
   const cn={idx:'股指',cmd:'商品',fx:'汇率',risk:'风险'};let ps=[],lc='';
   for(const m of markets.filter(m=>!m.error)){if(m.cat&&m.cat!==lc){ps.push(`[${cn[m.cat]||m.cat}]`);lc=m.cat;}ps.push(`${m.zh}:${Number(m.price).toFixed(2)}(${m.changePct>=0?'+':''}${Number(m.changePct).toFixed(2)}%)`);}
   return ps.join(' ');
+}
+function fmtMacro(d){
+  if(!d)return'';
+  let parts=[];
+  if(d.us&&Object.keys(d.us).length){
+    parts.push('[美国]');
+    for(const[k,v]of Object.entries(d.us)){
+      if(k==='_note'||!v.value)continue;
+      const ch=v.change!=null?(v.change>=0?'↑':'↓')+Math.abs(v.change):'';
+      parts.push(`${v.name}:${v.value}${v.unit}${ch?' '+ch:''}(${v.date||''})`);
+    }
+  }
+  if(d.eu&&Object.keys(d.eu).length){
+    parts.push('[欧元区]');
+    for(const[k,v]of Object.entries(d.eu)){
+      if(!v.value)continue;
+      const ch=v.change!=null?(v.change>=0?'↑':'↓')+Math.abs(v.change):'';
+      parts.push(`${v.name}:${v.value}${v.unit}${ch?' '+ch:''}(${v.date||''})`);
+    }
+  }
+  return parts.join(' ');
 }
 
 // ═══ RENDER（含号外按钮）═══
@@ -280,16 +302,23 @@ async function deepDive(elId, secIdx, itemIdx){
 
   try{
     const reply=await callDeepSeek({max_tokens:800,messages:[
-      {role:'system',content:`你是CyberPaperboy深度分析师。用户点击了一条简报条目的「号外」按钮，请对这条信息做深度展开分析。
+      {role:'system',content:`你是CyberPaperboy深度分析师。对用户选中的简报条目做结构化深度展开。
 
-要求：
-1.事件背景与历史脉络（50字）
-2.核心变量与利益相关方（50字）
-3.对出海企业的具体风险传导链（80字）
-4.与观察名单企业的关联（50字）
-5.建议关注方向（30字）
+请严格按以下格式输出（用中文，每段之间空一行）：
 
-用中文自然段落输出，不要用JSON。总字数约260字。`},
+📌 事件背景
+2-3句交代历史脉络和当前事件定位。
+
+🔗 风险传导链
+指出从事件到出海企业的具体传导路径，越具体越好。
+
+🏢 关联企业
+指出与观察名单中哪些企业直接或间接相关，说明原因。
+
+👉 建议关注
+1-2句指出接下来应重点盯什么变量或时间节点。
+
+总字数约250字。`},
       {role:'user',content:`板块：${sec.name}\n标题：${item.title}\n摘要：${item.body}\n来源：${item.source}\n\n今日其他背景：${briefContext.slice(0,500)}`}
     ]});
     area.innerHTML=`<div class="ni-deep">${esc(reply).replace(/\n/g,'<br>')}</div>`;
@@ -318,15 +347,36 @@ function extractJson(raw){
   // 基础清理
   c=c.replace(/,\s*([}\]])/g,'$1');
   c=c.replace(/[\x00-\x1F\x7F]/g,m=>m==='\n'||m==='\r'||m==='\t'?m:'');
-  // 策略：从最远的 } 往前逐个尝试，找到最长可解析的JSON
-  // 这样即使输出被截断或中间有乱码，也能拿到尽可能多的内容
-  let positions=[];
-  for(let i=c.length-1;i>=0;i--){if(c[i]==='}')positions.push(i);}
-  for(const pos of positions){
-    try{return JSON.parse(c.slice(0,pos+1));}catch{}
+  // 第一次尝试：找最后一个 } 截取
+  const e=c.lastIndexOf('}');
+  if(e!==-1){try{return JSON.parse(c.slice(0,e+1));}catch{}}
+  // 第二次尝试：修复被截断的JSON（token用尽导致输出不完整）
+  try{return JSON.parse(repairJson(c));}catch{}
+  // 第三次尝试：更激进的修复
+  try{let f=c.replace(/:\s*'([^']*)'/g,':"$1"').replace(/,\s*([}\]])/g,'$1');return JSON.parse(repairJson(f));}catch(err){throw new Error(`AI 格式异常，请重试（${err.message}）`);}
+}
+function repairJson(s){
+  // 移除末尾不完整的字符串值（未闭合的引号）
+  s=s.replace(/,?\s*"[^"]*$/,'');         // 末尾未闭合的字符串
+  s=s.replace(/,?\s*"[^"]*":\s*$/,'');    // 末尾只有key没有value
+  s=s.replace(/,?\s*"[^"]*":\s*"[^"]*$/,''); // value字符串未闭合
+  s=s.replace(/,?\s*$/,'');               // 清理末尾逗号
+  // 统计未闭合的括号并补全
+  let open=0,openB=0;
+  let inStr=false,esc=false;
+  for(let i=0;i<s.length;i++){
+    const ch=s[i];
+    if(esc){esc=false;continue;}
+    if(ch==='\\'){esc=true;continue;}
+    if(ch==='"'){inStr=!inStr;continue;}
+    if(inStr)continue;
+    if(ch==='{')open++;else if(ch==='}')open--;
+    if(ch==='[')openB++;else if(ch===']')openB--;
   }
-  // 所有 } 位置都试过了还不行，报错
-  throw new Error('AI 输出格式异常，请点击「再来一份」重试');
+  // 补全缺失的闭合符号
+  for(let i=0;i<openB;i++)s+=']';
+  for(let i=0;i<open;i++)s+='}';
+  return s;
 }
 
 // ═══ CHAT ═══
