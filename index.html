@@ -318,36 +318,15 @@ function extractJson(raw){
   // 基础清理
   c=c.replace(/,\s*([}\]])/g,'$1');
   c=c.replace(/[\x00-\x1F\x7F]/g,m=>m==='\n'||m==='\r'||m==='\t'?m:'');
-  // 第一次尝试：找最后一个 } 截取
-  const e=c.lastIndexOf('}');
-  if(e!==-1){try{return JSON.parse(c.slice(0,e+1));}catch{}}
-  // 第二次尝试：修复被截断的JSON（token用尽导致输出不完整）
-  try{return JSON.parse(repairJson(c));}catch{}
-  // 第三次尝试：更激进的修复
-  try{let f=c.replace(/:\s*'([^']*)'/g,':"$1"').replace(/,\s*([}\]])/g,'$1');return JSON.parse(repairJson(f));}catch(err){throw new Error(`AI 格式异常，请重试（${err.message}）`);}
-}
-function repairJson(s){
-  // 移除末尾不完整的字符串值（未闭合的引号）
-  s=s.replace(/,?\s*"[^"]*$/,'');         // 末尾未闭合的字符串
-  s=s.replace(/,?\s*"[^"]*":\s*$/,'');    // 末尾只有key没有value
-  s=s.replace(/,?\s*"[^"]*":\s*"[^"]*$/,''); // value字符串未闭合
-  s=s.replace(/,?\s*$/,'');               // 清理末尾逗号
-  // 统计未闭合的括号并补全
-  let open=0,openB=0;
-  let inStr=false,esc=false;
-  for(let i=0;i<s.length;i++){
-    const ch=s[i];
-    if(esc){esc=false;continue;}
-    if(ch==='\\'){esc=true;continue;}
-    if(ch==='"'){inStr=!inStr;continue;}
-    if(inStr)continue;
-    if(ch==='{')open++;else if(ch==='}')open--;
-    if(ch==='[')openB++;else if(ch===']')openB--;
+  // 策略：从最远的 } 往前逐个尝试，找到最长可解析的JSON
+  // 这样即使输出被截断或中间有乱码，也能拿到尽可能多的内容
+  let positions=[];
+  for(let i=c.length-1;i>=0;i--){if(c[i]==='}')positions.push(i);}
+  for(const pos of positions){
+    try{return JSON.parse(c.slice(0,pos+1));}catch{}
   }
-  // 补全缺失的闭合符号
-  for(let i=0;i<openB;i++)s+=']';
-  for(let i=0;i<open;i++)s+='}';
-  return s;
+  // 所有 } 位置都试过了还不行，报错
+  throw new Error('AI 输出格式异常，请点击「再来一份」重试');
 }
 
 // ═══ CHAT ═══
